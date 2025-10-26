@@ -21,9 +21,10 @@ public class ViviendaDAO {
         v.setColonia(rs.getString("colonia"));
         v.setCuartos(rs.getInt("cuartos"));
         v.setTieneAgua(rs.getString("tieneAgua"));
-        v.setTieneAgua(rs.getString("tieneLuz"));
-        v.setTieneAgua(rs.getString("tieneGas"));  
+        v.setTieneLuz(rs.getString("tieneLuz"));
+        v.setTieneGas(rs.getString("tieneGas"));  
         v.setIdLocalidad(rs.getInt("idLocalidad"));
+        v.setIdMunicipio(rs.getInt("IdMunicipio"));
         v.setIdTipoVivienda(rs.getInt("idTipoVivienda"));
         
         return v;
@@ -115,6 +116,8 @@ public class ViviendaDAO {
             ps.setInt(9, vivienda.getIdMunicipio());
             ps.setInt(10, vivienda.getIdTipoVivienda());
             
+            ps.setInt(11, vivienda.getCodigoVivienda());
+            
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;
 
@@ -124,7 +127,7 @@ public class ViviendaDAO {
     }
     
     public boolean eliminar(int id){
-        String sql = "DELETE FROM Vivienda WHERE idVivienda = ?";
+        String sql = "DELETE FROM Vivienda WHERE codigoVivienda = ?";
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);

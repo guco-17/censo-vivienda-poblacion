@@ -34,4 +34,20 @@ public class ViviendaControlador {
         
         return viviendaDAO.agregar(vivienda);
     }
+    public boolean actualizarVivienda(Vivienda vivienda) throws Exception {
+        if (vivienda.getCodigoVivienda()<= 0) {
+            throw new Exception("Se requiere el codigo de la vivienda para poder actualizarla.");
+        }
+        
+        return viviendaDAO.actualizar(vivienda);
+    }
+
+    // B. Método de Eliminación
+    public boolean eliminarVivienda(int idVivienda) throws Exception {
+        if (idVivienda <= 0) {
+            throw new Exception("Se requiere una ID de vivienda válida para eliminar.");
+        }
+        
+        return viviendaDAO.eliminar(idVivienda);
+    }
 }

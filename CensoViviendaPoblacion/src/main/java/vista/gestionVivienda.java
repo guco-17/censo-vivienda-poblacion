@@ -104,6 +104,8 @@ public class gestionVivienda extends javax.swing.JFrame {
         cboLocalidad = new javax.swing.JComboBox<>();
         lblLocalidad = new javax.swing.JLabel();
         btnRegistrar = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
@@ -114,58 +116,90 @@ public class gestionVivienda extends javax.swing.JFrame {
         lblViviendasTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblViviendasTitulo.setText("GESTIÓN DE VIVIENDAS");
 
+        lblCodigoVivienda.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblCodigoVivienda.setText("CodigoVivienda:");
 
         jScrollPane1.setViewportView(txtCodigoVivienda);
 
         jScrollPane2.setViewportView(txtCalle);
 
+        lblCalle.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblCalle.setText("Calle:");
 
+        lblNumeroExterior.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblNumeroExterior.setText("Número Exterior:");
 
         jScrollPane3.setViewportView(txtNumeroExterior);
 
+        lblColonia.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblColonia.setText("Colonia:");
 
         jScrollPane4.setViewportView(txtColonia);
 
+        cboAgua.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         cboAgua.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Si", "No" }));
 
+        lblAgua.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblAgua.setText("Tiene Agua?");
 
+        lblCuartos.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblCuartos.setText("Cantidad de cuartos:");
 
         jScrollPane5.setViewportView(txtCuartos);
 
+        cboLuz.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         cboLuz.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Si", "No" }));
 
+        lblLuz.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblLuz.setText("Tiene Luz?");
 
+        cboGas.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         cboGas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar", "Si", "No" }));
 
+        lblGas.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblGas.setText("Tiene Gas?");
 
+        cboTipoVivienda.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         cboTipoVivienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTipoViviendaActionPerformed(evt);
             }
         });
 
+        lblTipoVivienda.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblTipoVivienda.setText("Tipo de vivienda:");
 
+        cboLocalidad.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         cboLocalidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboLocalidadActionPerformed(evt);
             }
         });
 
+        lblLocalidad.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblLocalidad.setText("Localidad:");
 
+        btnRegistrar.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         btnRegistrar.setText("REGISTRAR");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarActionPerformed(evt);
+            }
+        });
+
+        btnActualizar.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        btnActualizar.setText("ACTUALIZAR");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        btnEliminar.setText("ELIMINAR");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -190,48 +224,66 @@ public class gestionVivienda extends javax.swing.JFrame {
             .addComponent(lblViviendasTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(126, 126, 126)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblLocalidad)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cboLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblTipoVivienda)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cboTipoVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblGas)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cboGas, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblCuartos)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblNumeroExterior)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblCodigoVivienda)
-                                .addComponent(lblCalle))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblLuz)
-                                .addComponent(lblColonia)
-                                .addComponent(lblAgua))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(cboLuz, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cboAgua, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(lblLocalidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboLocalidad, 0, 158, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(lblTipoVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboTipoVivienda, 0, 158, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(lblGas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboGas, 0, 158, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblCuartos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(lblNumeroExterior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblCodigoVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addComponent(lblCalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(lblLuz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(lblColonia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblAgua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cboLuz, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboAgua, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))))
+                .addGap(157, 157, 157))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(103, 103, 103)
+                .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(97, 97, 97))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +331,10 @@ public class gestionVivienda extends javax.swing.JFrame {
                     .addComponent(cboLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblLocalidad))
                 .addGap(18, 18, 18)
-                .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
@@ -385,7 +440,107 @@ public class gestionVivienda extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        Vivienda nuevaVivienda = new Vivienda();
+        
+        int codigoVivienda = parseIntSafely(txtCodigoVivienda.getText());
+        int cuartos = parseIntSafely(txtCuartos.getText());
+        int numeroExterior = parseIntSafely(txtNumeroExterior.getText());
+        String tieneAgua = (String) cboAgua.getSelectedItem();
+        String tieneLuz = (String) cboLuz.getSelectedItem();
+        String tieneGas = (String) cboGas.getSelectedItem();
+        
+        if (codigoVivienda <= 0 || cuartos <= 0 || numeroExterior <= 0) {
+            JOptionPane.showMessageDialog(this, "Asegúrese de que todos los campos numéricos (Código, Cuartos, Número Exterior) contengan valores enteros válidos.", "Error de Entrada", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (this.idLocalidadSeleccionada == -1 || this.idMunicipioSeleccionado == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una Localidad y un Tipo de Vivienda válidos.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (this.idTipoViviendaSeleccionado == -1) {
+             JOptionPane.showMessageDialog(this, "Debe seleccionar un Tipo de Vivienda válido.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+             return;
+        }
+        
+        try {
+            nuevaVivienda.setCodigoVivienda(codigoVivienda);
+            nuevaVivienda.setCalle(txtCalle.getText());
+            nuevaVivienda.setNumeroExterior(numeroExterior);
+            nuevaVivienda.setColonia(txtColonia.getText());
+            nuevaVivienda.setCuartos(cuartos);
+            nuevaVivienda.setTieneAgua(tieneAgua);
+            nuevaVivienda.setTieneLuz(tieneLuz);
+            nuevaVivienda.setTieneGas(tieneGas);
+
+            // ** CLAVES FORÁNEAS ** (Obtenidas de los ActionListeners de los ComboBoxes)
+            nuevaVivienda.setIdLocalidad(this.idLocalidadSeleccionada); 
+            nuevaVivienda.setIdTipoVivienda(this.idTipoViviendaSeleccionado);
+            nuevaVivienda.setIdMunicipio(this.idMunicipioSeleccionado);
+
+        } catch (Exception e) {
+            // Este catch solo ocurriría si hubiera un error grave en la asignación,
+            // la validación se hace principalmente en el Controller.
+            JOptionPane.showMessageDialog(this, "Error de formato de datos. Verifique campos numéricos.", "Error de Entrada", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            boolean exito = controlador.actualizarVivienda(nuevaVivienda);
+
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Vivienda actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+ 
+            } else {
+                JOptionPane.showMessageDialog(this, "La vivienda no fue actualizada. Intente de nuevo.", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al registrar la vivienda: \n" + e.getMessage(), "Error Crítico", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int codigoAEliminar = parseIntSafely(txtCodigoVivienda.getText());
+        
+        if (codigoAEliminar <= 0) {
+            JOptionPane.showMessageDialog(this, 
+                    "Debe ingresar el Código de la Vivienda a eliminar.", 
+                    "Error de Eliminación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro de que desea eliminar la Vivienda con Código: " + codigoAEliminar + "?\n"
+          + "ADVERTENCIA: Si esta vivienda tiene habitantes registrados, la operación fallará.", 
+            "Confirmar Eliminación", 
+            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // 3. LLAMADA AL CONTROLADOR
+            try {
+                // Se llama al controlador, que a su vez llama al DAO (usando codigoVivienda en el WHERE)
+                boolean exito = controlador.eliminarVivienda(codigoAEliminar);
+
+                if (exito) {
+                    JOptionPane.showMessageDialog(this, 
+                            "Vivienda con Código " + codigoAEliminar + " eliminada con éxito.", 
+                            "Éxito", JOptionPane.INFORMATION_MESSAGE); 
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                            "La vivienda con ese código no fue encontrada o no se pudo eliminar (revisa si tiene habitantes).", 
+                            "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                        "Error al intentar eliminar la vivienda: \n" + e.getMessage(), 
+                        "Error Crítico", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> cboAgua;
     private javax.swing.JComboBox<String> cboGas;
