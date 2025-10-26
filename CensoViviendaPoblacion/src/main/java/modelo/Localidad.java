@@ -43,5 +43,5 @@ public class Localidad extends Catalogo{
 
     public void setMunicipio(Municipio municipio) {
         this.municipio = municipio;
-    }  
+    }   
 }

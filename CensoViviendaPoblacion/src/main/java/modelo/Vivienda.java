@@ -14,6 +14,7 @@ public class Vivienda {
     private String tieneLuz;
     private String tieneGas;
     private int idLocalidad;
+    private int idMunicipio;
     private int idTipoVivienda;
     //ATRIBUTOS DE LA LÓGICA DEL NEGOCIO.
     private ArrayList<Habitante> habitantes;
@@ -24,7 +25,7 @@ public class Vivienda {
     }
 
     //CONSTRUCTOR
-    public Vivienda(int idVivienda, int codigoVivenda, String calle, int numeroExterior, String colonia, int cuartos, String tieneAgua, String tieneLuz, String tieneGas, int idLocalidad, int idTipoVivienda) {
+    public Vivienda(int idVivienda, int codigoVivenda, String calle, int numeroExterior, String colonia, int cuartos, String tieneAgua, String tieneLuz, String tieneGas, int idLocalidad, int idMunicipio, int idTipoVivienda) {
         this.idVivienda = idVivienda;
         this.codigoVivienda = codigoVivenda;
         this.calle = calle;
@@ -35,6 +36,7 @@ public class Vivienda {
         this.tieneLuz = tieneLuz;
         this.tieneGas = tieneGas;
         this.idLocalidad = idLocalidad;
+        this.idMunicipio = idMunicipio;
         this.idTipoVivienda = idTipoVivienda;
     }
 
@@ -117,6 +119,14 @@ public class Vivienda {
 
     public void setIdLocalidad(int idLocalidad) {
         this.idLocalidad = idLocalidad;
+    }
+
+    public int getIdMunicipio() {
+        return idMunicipio;
+    }
+
+    public void setIdMunicipio(int idMunicipio) {
+        this.idMunicipio = idMunicipio;
     }
 
     public int getIdTipoVivienda() {

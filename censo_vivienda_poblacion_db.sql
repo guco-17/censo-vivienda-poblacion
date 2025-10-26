@@ -8,18 +8,18 @@ GO
 -- CREAR TABLAS DE LA BASE
 CREATE TABLE TipoVivienda(
 	idTipoVivienda INT PRIMARY KEY IDENTITY(1,1),
-	descripcion VARCHAR(200)
+	descripcion VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE ActividadEconomica(
 	idActividadEconomica INT PRIMARY KEY IDENTITY(1,1),
-	descripcion VARCHAR(200)
+	descripcion VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE Municipio(
 	idMunicipio INT PRIMARY KEY IDENTITY(1,1),
 	cve_mun VARCHAR(5) NOT NULL,
-	descripcion VARCHAR(200)
+	descripcion VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE Localidad(

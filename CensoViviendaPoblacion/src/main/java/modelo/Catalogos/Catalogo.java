@@ -30,6 +30,6 @@ public abstract class Catalogo {
 
     @Override
     public String toString() {
-        return descripcion;
+        return this.getDescripcion();
     }    
 }

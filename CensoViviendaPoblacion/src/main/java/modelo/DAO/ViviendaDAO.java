@@ -31,8 +31,8 @@ public class ViviendaDAO {
     
     public boolean agregar(Vivienda vivienda){
         // Se incluyen todos los campos excepto idVivienda (autoincremental) y idMunicipio (redundante, se deriva de Localidad)
-        String sql = "INSERT INTO Vivienda (codigoVivienda, calle, numeroExterior, colonia, cuartos, tieneAgua, tieneLuz, tieneGas, idLocalidad, idTipoVivienda) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Vivienda (codigoVivienda, calle, numeroExterior, colonia, cuartos, tieneAgua, tieneLuz, tieneGas, idLocalidad, idMunicipio, idTipoVivienda) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, vivienda.getCodigoVivienda());
@@ -44,7 +44,8 @@ public class ViviendaDAO {
             ps.setString(7, vivienda.getTieneLuz());
             ps.setString(8, vivienda.getTieneGas());
             ps.setInt(9, vivienda.getIdLocalidad());
-            ps.setInt(10, vivienda.getIdTipoVivienda());
+            ps.setInt(10, vivienda.getIdMunicipio());
+            ps.setInt(11, vivienda.getIdTipoVivienda());
             
             int filasAfectadas = ps.executeUpdate();
             
@@ -85,7 +86,7 @@ public class ViviendaDAO {
     
     public ArrayList<Vivienda> obtenerTodos(){
         ArrayList<Vivienda> viviendas = new ArrayList<>();
-        String sql = "SELECT idVivienda, codigoVivienda, calle, numeroExterior, colonia, cuartos, tieneAgua, tieneLuz, tieneGas, idLocalidad, idTipoVivienda FROM Vivienda";
+        String sql = "SELECT idVivienda, codigoVivienda, calle, numeroExterior, colonia, cuartos, tieneAgua, tieneLuz, tieneGas, idLocalidad, idMunicipio, idTipoVivienda FROM Vivienda";
         
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -100,7 +101,7 @@ public class ViviendaDAO {
     }
     
     public boolean actualizar(Vivienda vivienda) throws Exception {
-        String sql = "UPDATE Vivienda SET calle=?, numeroExterior=?, colonia=?, cuartos=?, tieneAgua=?, tieneLuz=?, tieneGas=?, idLocalidad=?, idTipoVivienda=? WHERE codigoVivienda=?";
+        String sql = "UPDATE Vivienda SET calle=?, numeroExterior=?, colonia=?, cuartos=?, tieneAgua=?, tieneLuz=?, tieneGas=?, idLocalidad=?, idMunicipio=?, idTipoVivienda=? WHERE codigoVivienda=?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, vivienda.getCalle());
@@ -111,7 +112,8 @@ public class ViviendaDAO {
             ps.setString(6, vivienda.getTieneLuz());
             ps.setString(7, vivienda.getTieneGas());
             ps.setInt(8, vivienda.getIdLocalidad());
-            ps.setInt(9, vivienda.getIdTipoVivienda());
+            ps.setInt(9, vivienda.getIdMunicipio());
+            ps.setInt(10, vivienda.getIdTipoVivienda());
             
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;
