@@ -25,7 +25,7 @@ CREATE TABLE Municipio(
 CREATE TABLE Localidad(
 	idLocalidad INT PRIMARY KEY IDENTITY(1,1),
 	cve_loc VARCHAR(5) NOT NULL,
-	descripcion VARCHAR(200),
+	descripcion VARCHAR(50) UNIQUE,
 	idMunicipio INT NOT NULL,
 
 	CONSTRAINT FK_Localidad_Municipio FOREIGN KEY (idMunicipio)

@@ -13,20 +13,21 @@ public class HabitanteDAO{
     }
     
     public boolean agregar(Habitante habitante){
-        String sql = "INSERT INTO Habitante (nombre, paterno, materno, fechaNacimiento, genero, estadoCivil, nivelEducacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Habitante (codigoHabitante, nombre, paterno, materno, fechaNacimiento, genero, estadoCivil, nivelEducacion, idVivienda) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try(PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
-            ps.setString(1, habitante.getNombre());
-            ps.setString(2, habitante.getPaterno());
-            ps.setString(3, habitante.getMaterno());
-            ps.setDate(4, new java.sql.Date(habitante.getFechaNacimiento().getTime())); 
-            ps.setString(5, habitante.getGenero());
-            ps.setString(6, habitante.getEstadoCivil());
-            ps.setString(7, habitante.getNivelEducacion());
+            ps.setInt(1, habitante.getCodigoHabitante());
+            ps.setString(2, habitante.getNombre());
+            ps.setString(3, habitante.getPaterno());
+            ps.setString(4, habitante.getMaterno());
+            ps.setDate(5, new java.sql.Date(habitante.getFechaNacimiento().getTime())); 
+            ps.setString(6, habitante.getGenero());
+            ps.setString(7, habitante.getEstadoCivil());
+            ps.setString(8, habitante.getNivelEducacion());
+            ps.setInt(9, habitante.getIdVivienda());
             
             int filasAfectadas = ps.executeUpdate();
             
-            // Opcional: Obtener el ID generado (si lo necesitas)
             if (filasAfectadas > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -42,7 +43,7 @@ public class HabitanteDAO{
     }
     
     public boolean actualizar(Habitante habitante){
-        String sql = "UPDATE Habitante SET nombre=?, paterno=?, materno=?, fechaNacimiento=?, genero=?, estadoCivil=?, nivelEducacion=? WHERE idHabitante=?";
+        String sql = "UPDATE Habitante SET nombre=?, paterno=?, materno=?, fechaNacimiento=?, genero=?, estadoCivil=?, nivelEducacion=?, idVivienda = ? WHERE codigoHabitante=?";
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, habitante.getNombre());
@@ -52,7 +53,8 @@ public class HabitanteDAO{
             ps.setString(5, habitante.getGenero());
             ps.setString(6, habitante.getEstadoCivil());
             ps.setString(7, habitante.getNivelEducacion());
-            ps.setInt(8, habitante.getIdHabitante()); // Condición WHERE
+            ps.setInt(8, habitante.getIdVivienda());
+            ps.setInt(9, habitante.getCodigoHabitante());
             
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;
@@ -64,7 +66,7 @@ public class HabitanteDAO{
     }
     
     public boolean eliminar(int id){
-        String sql = "DELETE FROM Habitante WHERE idHabitante = ?";
+        String sql = "DELETE FROM Habitante WHERE codigoHabitante = ?";
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
