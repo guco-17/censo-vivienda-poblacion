@@ -1,15 +1,18 @@
 package vista;
 
 import controlador.UsuarioControlador;
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
 
 public class gestionUsuarios extends javax.swing.JFrame {
-    private UsuarioControlador usuarioControlador;
+    private final UsuarioControlador usuarioControlador;
+    private final Usuario usuarioSesion;
     
-    public gestionUsuarios() {
+    public gestionUsuarios(Usuario usuarioAutenticado) {
         initComponents();
         this.usuarioControlador = new UsuarioControlador();
+        this.usuarioSesion = usuarioAutenticado;
     }
 
     @SuppressWarnings("unchecked")
@@ -27,6 +30,7 @@ public class gestionUsuarios extends javax.swing.JFrame {
         btnEliminarUsuario = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
+        menuItemInicio = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,6 +71,15 @@ public class gestionUsuarios extends javax.swing.JFrame {
         });
 
         menuInicio.setText("Inicio");
+
+        menuItemInicio.setText("Regresar");
+        menuItemInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemInicioActionPerformed(evt);
+            }
+        });
+        menuInicio.add(menuItemInicio);
+
         jMenuBar1.add(menuInicio);
 
         setJMenuBar(jMenuBar1);
@@ -128,7 +141,7 @@ public class gestionUsuarios extends javax.swing.JFrame {
 
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
         String nombreUsuario = txtNombreUsuario.getText().trim();
-        String password = new String(txtPassword.getText().trim()); 
+        String password = txtPassword.getText().trim(); 
         String rol = cboRolUsuario.getSelectedItem().toString();
         
         if (nombreUsuario.isEmpty() || password.isEmpty() || rol.equals("seleccionar rol")) {
@@ -151,7 +164,7 @@ public class gestionUsuarios extends javax.swing.JFrame {
                  JOptionPane.showMessageDialog(this, "La operación no afectó ninguna fila.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al Crear Usuario", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnCrearUsuarioActionPerformed
@@ -178,42 +191,16 @@ public class gestionUsuarios extends javax.swing.JFrame {
                  JOptionPane.showMessageDialog(this, "La operación no afectó ninguna fila.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al Crear Usuario", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
 
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(gestionUsuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(gestionUsuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(gestionUsuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(gestionUsuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new gestionUsuarios().setVisible(true);
-            }
-        });
-    }
+    private void menuItemInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemInicioActionPerformed
+        Inicio inicio = new Inicio(this.usuarioSesion);
+        inicio.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemInicioActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearUsuario;
@@ -225,6 +212,7 @@ public class gestionUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel lblRolUsuario;
     private javax.swing.JLabel lblUsuariosTitulo;
     private javax.swing.JMenu menuInicio;
+    private javax.swing.JMenuItem menuItemInicio;
     private javax.swing.JTextField txtNombreUsuario;
     private javax.swing.JTextField txtPassword;
     // End of variables declaration//GEN-END:variables

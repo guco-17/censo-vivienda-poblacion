@@ -5,28 +5,28 @@ import java.util.ArrayList;
 public class Vivienda {
     //ATRIBUTOS DE LA ENTIDAD (CAMPOS EN LA BASE DE DATOS)
     private int idVivienda;
+    private int codigoVivienda;
     private String calle;
     private int numeroExterior;
     private String colonia;
     private int cuartos;
-    private boolean tieneAgua;
-    private boolean tieneLuz;
-    private boolean tieneGas;
+    private String tieneAgua;
+    private String tieneLuz;
+    private String tieneGas;
     private int idLocalidad;
-    private int idMunicipio;
     private int idTipoVivienda;
     //ATRIBUTOS DE LA LÓGICA DEL NEGOCIO.
+    private ArrayList<Habitante> habitantes;
     private int totalHabitantes;
-    private String tipoVivienda_descripcion;
-    private ArrayList<String> actividadesEconomicas;
 
     //CONSTRUCTOR VACÍO
     public Vivienda() {
     }
 
     //CONSTRUCTOR
-    public Vivienda(int idVivienda, String calle, int numeroExterior, String colonia, int cuartos, boolean tieneAgua, boolean tieneLuz, boolean tieneGas, int idLocalidad, int idMunicipio, int idTipoVivienda) {
+    public Vivienda(int idVivienda, int codigoVivenda, String calle, int numeroExterior, String colonia, int cuartos, String tieneAgua, String tieneLuz, String tieneGas, int idLocalidad, int idTipoVivienda) {
         this.idVivienda = idVivienda;
+        this.codigoVivienda = codigoVivenda;
         this.calle = calle;
         this.numeroExterior = numeroExterior;
         this.colonia = colonia;
@@ -35,17 +35,24 @@ public class Vivienda {
         this.tieneLuz = tieneLuz;
         this.tieneGas = tieneGas;
         this.idLocalidad = idLocalidad;
-        this.idMunicipio = idMunicipio;
         this.idTipoVivienda = idTipoVivienda;
     }
-    
-    //GETTERS Y SETTERS.
+
+    //GETTERS Y SETTERS
     public int getIdVivienda() {
         return idVivienda;
     }
 
     public void setIdVivienda(int idVivienda) {
         this.idVivienda = idVivienda;
+    }
+
+    public int getCodigoVivienda() {
+        return codigoVivienda;
+    }
+
+    public void setCodigoVivienda(int codigoVivienda) {
+        this.codigoVivienda = codigoVivienda;
     }
 
     public String getCalle() {
@@ -80,27 +87,27 @@ public class Vivienda {
         this.cuartos = cuartos;
     }
 
-    public boolean isTieneAgua() {
+    public String getTieneAgua() {
         return tieneAgua;
     }
 
-    public void setTieneAgua(boolean tieneAgua) {
+    public void setTieneAgua(String tieneAgua) {
         this.tieneAgua = tieneAgua;
     }
 
-    public boolean isTieneLuz() {
+    public String getTieneLuz() {
         return tieneLuz;
     }
 
-    public void setTieneLuz(boolean tieneLuz) {
+    public void setTieneLuz(String tieneLuz) {
         this.tieneLuz = tieneLuz;
     }
 
-    public boolean isTieneGas() {
+    public String getTieneGas() {
         return tieneGas;
     }
 
-    public void setTieneGas(boolean tieneGas) {
+    public void setTieneGas(String tieneGas) {
         this.tieneGas = tieneGas;
     }
 
@@ -112,14 +119,6 @@ public class Vivienda {
         this.idLocalidad = idLocalidad;
     }
 
-    public int getIdMunicipio() {
-        return idMunicipio;
-    }
-
-    public void setIdMunicipio(int idMunicipio) {
-        this.idMunicipio = idMunicipio;
-    }
-
     public int getIdTipoVivienda() {
         return idTipoVivienda;
     }
@@ -128,27 +127,19 @@ public class Vivienda {
         this.idTipoVivienda = idTipoVivienda;
     }
 
+    public ArrayList<Habitante> getHabitantes() {
+        return habitantes;
+    }
+
+    public void setHabitantes(ArrayList<Habitante> habitantes) {
+        this.habitantes = habitantes;
+    }
+
     public int getTotalHabitantes() {
         return totalHabitantes;
     }
 
     public void setTotalHabitantes(int totalHabitantes) {
         this.totalHabitantes = totalHabitantes;
-    }
-
-    public String getTipoVivienda_descripcion() {
-        return tipoVivienda_descripcion;
-    }
-
-    public void setTipoVivienda_descripcion(String tipoVivienda_descripcion) {
-        this.tipoVivienda_descripcion = tipoVivienda_descripcion;
-    }
-
-    public ArrayList<String> getActividadesEconomicas() {
-        return actividadesEconomicas;
-    }
-
-    public void setActividadesEconomicas(ArrayList<String> actividadesEconomicas) {
-        this.actividadesEconomicas = actividadesEconomicas;
     }
 }

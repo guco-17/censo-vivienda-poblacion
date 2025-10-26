@@ -28,8 +28,10 @@ public class Inicio extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
-        menuPoblacion = new javax.swing.JMenu();
         menuVivienda = new javax.swing.JMenu();
+        menuItemGestionarVivienda = new javax.swing.JMenuItem();
+        menuPoblacion = new javax.swing.JMenu();
+        menuItemGestionHabitantes = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,11 +47,29 @@ public class Inicio extends javax.swing.JFrame {
 
         menuBar.add(menuUsuarios);
 
-        menuPoblacion.setText("Población");
-        menuBar.add(menuPoblacion);
-
         menuVivienda.setText("Vivienda");
+
+        menuItemGestionarVivienda.setText("Gestionar Viviendas");
+        menuItemGestionarVivienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemGestionarViviendaActionPerformed(evt);
+            }
+        });
+        menuVivienda.add(menuItemGestionarVivienda);
+
         menuBar.add(menuVivienda);
+
+        menuPoblacion.setText("Población");
+
+        menuItemGestionHabitantes.setText("Gestionar Habitantes");
+        menuItemGestionHabitantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemGestionHabitantesActionPerformed(evt);
+            }
+        });
+        menuPoblacion.add(menuItemGestionHabitantes);
+
+        menuBar.add(menuPoblacion);
 
         setJMenuBar(menuBar);
 
@@ -68,13 +88,27 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usuariosGestionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuariosGestionarActionPerformed
-        gestionUsuarios gestionarUsuarios = new gestionUsuarios();
+        gestionUsuarios gestionarUsuarios = new gestionUsuarios(this.usuarioActual);
         gestionarUsuarios.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_usuariosGestionarActionPerformed
 
+    private void menuItemGestionHabitantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGestionHabitantesActionPerformed
+        gestionHabitantes gestionarHabitantes = new gestionHabitantes(this.usuarioActual);
+        gestionarHabitantes.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemGestionHabitantesActionPerformed
+
+    private void menuItemGestionarViviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGestionarViviendaActionPerformed
+        gestionVivienda gestionarViviendas = new gestionVivienda(this.usuarioActual);
+        gestionarViviendas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemGestionarViviendaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem menuItemGestionHabitantes;
+    private javax.swing.JMenuItem menuItemGestionarVivienda;
     private javax.swing.JMenu menuPoblacion;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;

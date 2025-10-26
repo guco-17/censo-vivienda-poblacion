@@ -6,26 +6,29 @@ import java.util.Date;
 public class Habitante {
     //ATRIBUTOS DE LA ENTIDAD (CAMPOS EN LA BD)
     private int idHabitante;
+    private int codigoHabitante;
     private String nombre;
     private String paterno;
     private String materno;
     private Date fechaNacimiento;
-    private char genero;
+    private String genero;
     private String estadoCivil;
     private String nivelEducacion;
+    //LLAVE FORANEA
     private int idVivienda;
+    private Vivienda vivienda;
     //ATRIBUTOS DE LA LOGICA DE NEGOCIO
     private int edad;
-    private String viviendaCalle;
-    private ArrayList<String> actividadesEconomicas;
+    private ArrayList<ActividadEconomica> actividadesEconomicas;
     
     //CONSTYRUCTOR VACIO
     public Habitante() {
     }
 
     //CONSTRUCTOR
-    public Habitante(int idHabitante, String nombre, String paterno, String materno, Date fechaNacimiento, char genero, String estadoCivil, String nivelEducacion, int idVivienda) {
+    public Habitante(int idHabitante, int codigoHabitante,  String nombre, String paterno, String materno, Date fechaNacimiento, String genero, String estadoCivil, String nivelEducacion, int idVivienda) {
         this.idHabitante = idHabitante;
+        this.codigoHabitante = codigoHabitante;
         this.nombre = nombre;
         this.paterno = paterno;
         this.materno = materno;
@@ -44,6 +47,15 @@ public class Habitante {
     public void setIdHabitante(int idHabitante) {
         this.idHabitante = idHabitante;
     }
+
+    public int getCodigoHabitante() {
+        return codigoHabitante;
+    }
+
+    public void setCodigoHabitante(int codigoHabitante) {
+        this.codigoHabitante = codigoHabitante;
+    }
+    
 
     public String getNombre() {
         return nombre;
@@ -77,11 +89,11 @@ public class Habitante {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public char getGenero() {
+    public String getGenero() {
         return genero;
     }
 
-    public void setGenero(char genero) {
+    public void setGenero(String genero) {
         this.genero = genero;
     }
 
@@ -117,20 +129,20 @@ public class Habitante {
         this.edad = edad;
     }
 
-    public String getViviendaCalle() {
-        return viviendaCalle;
+    public Vivienda getVivienda() {
+        return vivienda;
     }
 
-    public void setViviendaCalle(String viviendaCalle) {
-        this.viviendaCalle = viviendaCalle;
+    public void setVivienda(Vivienda vivienda) {
+        this.vivienda = vivienda;
     }
 
-    public ArrayList<String> getActividadesEconomicas() {
+    public ArrayList<ActividadEconomica> getActividadesEconomicas() {
         return actividadesEconomicas;
     }
 
-    public void setActividadesEconomicas(ArrayList<String> actividadesEconomicas) {
+    public void setActividadesEconomicas(ArrayList<ActividadEconomica> actividadesEconomicas) {
         this.actividadesEconomicas = actividadesEconomicas;
     }
-
+    
 }

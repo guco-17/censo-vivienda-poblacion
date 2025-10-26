@@ -4,37 +4,13 @@ import java.security.*;
 import modelo.ConexionDB;
 import modelo.Usuario;
 import java.sql.*;
+import java.util.ArrayList;
 
-public class UsuarioDAO {
+public class UsuarioDAO{
     private Connection conn = ConexionDB.getInstance().getConnection();
             
     public UsuarioDAO() {
         this.conn = ConexionDB.getInstance().getConnection(); 
-    }
-    
-    public Usuario validarCredenciales(String nombreUsuario, String passwordHash){
-        Usuario user = null;
-        ResultSet rs = null;
-        String sql = "SELECT idUsuario, nombreUsuario, rol FROM Usuario WHERE nombreUsuario = ? AND passwordHash = ?";
-        
-        try(PreparedStatement ps = this.conn.prepareCall(sql)){
-            ps.setString(1, nombreUsuario);
-            ps.setString(2, passwordHash);
-            
-            rs = ps.executeQuery();
-            
-            if (rs.next()) {
-                user = new Usuario();
-                user.setIdUsuario(rs.getInt("idUsuario"));
-                user.setNombreUsuario(rs.getString("nombreUsuario"));
-                user.setRol(rs.getString("rol"));
-                user.setSesionIniciada(true); 
-            }
-        } catch(SQLException e){
-            System.err.println("Error SQL al validar credenciales: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return user;
     }
     
     public static String hashPassword(String password) {
@@ -54,6 +30,34 @@ public class UsuarioDAO {
         }
     }
     
+    public Usuario validarCredenciales(String nombreUsuario, String password){
+        Usuario user = null;
+        String passwordHash = hashPassword(password);
+        if (passwordHash == null) {
+            return null; 
+        }
+        ResultSet rs = null;
+        String sql = "SELECT idUsuario, nombreUsuario, rol FROM Usuario WHERE nombreUsuario = ? AND passwordHash = ?";
+        
+        try(PreparedStatement ps = this.conn.prepareCall(sql)){
+            ps.setString(1, nombreUsuario);
+            ps.setString(2, passwordHash);
+            
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                user = new Usuario();
+                user.setIdUsuario(rs.getInt("idUsuario"));
+                user.setNombreUsuario(rs.getString("nombreUsuario"));
+                user.setRol(rs.getString("rol"));
+                user.setSesionIniciada(true); 
+            }
+        } catch(SQLException e){
+            System.err.println("Error SQL al validar credenciales: " + e.getMessage());
+        }
+        return user;
+    }
+    
     public boolean agregar(Usuario usuario){
         String sql = "INSERT INTO Usuario (nombreUsuario, passwordHash, rol) VALUES (?, ?, ?)";
         
@@ -68,7 +72,6 @@ public class UsuarioDAO {
             return filasAfectadas > 0;
         } catch (SQLException e){
             System.err.println("Error SQL: " + e.getMessage());
-            e.printStackTrace();
             return false;
         }
     }
@@ -85,7 +88,6 @@ public class UsuarioDAO {
             
         } catch (SQLException e) {
             System.err.println("Error SQL: " + e.getMessage());
-            e.printStackTrace();
             return false;
         }
     }

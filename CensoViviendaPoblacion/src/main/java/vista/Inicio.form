@@ -19,15 +19,35 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="menuPoblacion">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Poblaci&#xf3;n"/>
-          </Properties>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="menuVivienda">
           <Properties>
             <Property name="text" type="java.lang.String" value="Vivienda"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemGestionarVivienda">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gestionar Viviendas"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemGestionarViviendaActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="menuPoblacion">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Poblaci&#xf3;n"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemGestionHabitantes">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gestionar Habitantes"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemGestionHabitantesActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>

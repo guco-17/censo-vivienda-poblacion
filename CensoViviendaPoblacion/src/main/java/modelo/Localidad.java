@@ -6,6 +6,7 @@ public class Localidad extends Catalogo{
     //ATRIBUTOS UNICOS DE LOCALIDA + CATALOGO
     private String cve_loc;
     private int idMunicipio;
+    private Municipio municipio;
     
     //CONSTRUCTOR VACIO
     public Localidad() {
@@ -35,4 +36,12 @@ public class Localidad extends Catalogo{
     public void setIdMunicipio(int idMunicipio) {
         this.idMunicipio = idMunicipio;
     }
+
+    public Municipio getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(Municipio municipio) {
+        this.municipio = municipio;
+    }  
 }

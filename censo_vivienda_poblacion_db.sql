@@ -35,13 +35,14 @@ CREATE TABLE Localidad(
 -- TABLAS DE ENTIDADES PRINCIPALES
 CREATE TABLE Vivienda(
 	idVivienda INT PRIMARY KEY IDENTITY(1,1),
+	codigoVivienda INT NOT NULL,
     calle VARCHAR(150) NOT NULL,
     numeroExterior INT,
     colonia VARCHAR(100),
     cuartos INT NOT NULL,
-    tieneAgua BIT NOT NULL,
-    tieneLuz BIT NOT NULL,
-    tieneGas BIT NOT NULL,
+    tieneAgua VARCHAR(2) NOT NULL,
+    tieneLuz VARCHAR(2) NOT NULL,
+    tieneGas VARCHAR(2) NOT NULL,
 
 	idLocalidad INT NOT NULL,
     idMunicipio INT NOT NULL,
@@ -59,11 +60,12 @@ CREATE TABLE Vivienda(
 
 CREATE TABLE Habitante (
     idHabitante INT PRIMARY KEY IDENTITY(1,1),
+	codigoHabitante INT NOT NULL,
     nombre VARCHAR(50) NOT NULL,
     paterno VARCHAR(50) NOT NULL,
     materno VARCHAR(50),
     fechaNacimiento DATE NOT NULL,
-    genero CHAR(1) NOT NULL,
+    genero VARCHAR(1) NOT NULL,
     estadoCivil VARCHAR(30),
     nivelEducacion VARCHAR(50),
     
