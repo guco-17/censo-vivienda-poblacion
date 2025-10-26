@@ -14,7 +14,7 @@ public class ConexionDB {
     private ConexionDB() {
         try{
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Conexión a SQL Server establecida con éxito.");
+            System.out.println("Conexion a SQL Server establecida con exito.");
         } catch(SQLException e){
             System.err.println("Error al conectar a SQL Server. Revisa tus credenciales y el conector JDBC: " + e.getMessage());
             e.printStackTrace();
