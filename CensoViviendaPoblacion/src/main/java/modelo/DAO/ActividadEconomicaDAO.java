@@ -54,4 +54,41 @@ public class ActividadEconomicaDAO {
         return lista;
     }
     
+    public boolean agregar(ActividadEconomica actividad) throws SQLException {
+        // Asume que el ID es autoincremental en la BD y solo se registra la descripción
+        String sql = "INSERT INTO ActividadEconomica (descripcion) VALUES (?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, actividad.getDescripcion());
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            System.err.println("Error SQL al agregar actividad economica: " + e.getMessage());
+            throw e; 
+        }
+    }
+
+    public boolean actualizar(ActividadEconomica actividad) throws SQLException {
+        String sql = "UPDATE ActividadEconomica SET descripcion = ? WHERE idActividadEconomica = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, actividad.getDescripcion());
+            ps.setInt(2, actividad.getId());
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            System.err.println("Error SQL al actualizar actividad economica: " + e.getMessage());
+            throw e;
+        }
+    }
+    
+    public boolean eliminar(int id) throws SQLException {
+        String sql = "DELETE FROM ActividadEconomica WHERE idActividadEconomica = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            System.err.println("Error SQL al eliminar actividad economica: " + e.getMessage());
+            throw e;
+        }
+    }    
 }

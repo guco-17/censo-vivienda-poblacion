@@ -28,6 +28,9 @@ public class Inicio extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
+        menuCatalogos = new javax.swing.JMenu();
+        menuItemTipoViviendaCRUD = new javax.swing.JMenuItem();
+        menuItemActividadesEconomicas = new javax.swing.JMenuItem();
         menuVivienda = new javax.swing.JMenu();
         menuItemGestionarVivienda = new javax.swing.JMenuItem();
         menuItemTablaViviendas = new javax.swing.JMenuItem();
@@ -48,6 +51,26 @@ public class Inicio extends javax.swing.JFrame {
         menuUsuarios.add(usuariosGestionar);
 
         menuBar.add(menuUsuarios);
+
+        menuCatalogos.setText("Catalogos");
+
+        menuItemTipoViviendaCRUD.setText("Tipo de Vivienda");
+        menuItemTipoViviendaCRUD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemTipoViviendaCRUDActionPerformed(evt);
+            }
+        });
+        menuCatalogos.add(menuItemTipoViviendaCRUD);
+
+        menuItemActividadesEconomicas.setText("Actividades Economicas");
+        menuItemActividadesEconomicas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemActividadesEconomicasActionPerformed(evt);
+            }
+        });
+        menuCatalogos.add(menuItemActividadesEconomicas);
+
+        menuBar.add(menuCatalogos);
 
         menuVivienda.setText("Vivienda");
 
@@ -135,12 +158,27 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void menuItemTipoViviendaCRUDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTipoViviendaCRUDActionPerformed
+        TipoViviendaCRUD tipoviviendacrud = new TipoViviendaCRUD(this.usuarioActual);
+        tipoviviendacrud.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemTipoViviendaCRUDActionPerformed
+
+    private void menuItemActividadesEconomicasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemActividadesEconomicasActionPerformed
+        ActividadesEconomicasCRUD actEconom = new ActividadesEconomicasCRUD(this.usuarioActual);
+        actEconom.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemActividadesEconomicasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuCatalogos;
+    private javax.swing.JMenuItem menuItemActividadesEconomicas;
     private javax.swing.JMenuItem menuItemGestionHabitantes;
     private javax.swing.JMenuItem menuItemGestionarVivienda;
     private javax.swing.JMenuItem menuItemTablaViviendas;
+    private javax.swing.JMenuItem menuItemTipoViviendaCRUD;
     private javax.swing.JMenu menuPoblacion;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;

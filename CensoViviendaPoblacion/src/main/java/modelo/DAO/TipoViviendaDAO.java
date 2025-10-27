@@ -31,4 +31,36 @@ public class TipoViviendaDAO {
         return tipos;
     }
     
+    public TipoVivienda mapearTipoVivienda(ResultSet rs) throws SQLException {
+        TipoVivienda tv = new TipoVivienda();
+        tv.setId(rs.getInt("idTipoVivienda"));
+        tv.setDescripcion(rs.getString("descripcion"));
+        return tv;
+    }
+       
+    public boolean agregar(TipoVivienda tipoVivienda) throws SQLException {
+        String sql = "INSERT INTO TipoVivienda (descripcion) VALUES (?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tipoVivienda.getDescripcion());
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
+    public boolean actualizar(TipoVivienda tipoVivienda) throws SQLException {
+        String sql = "UPDATE TipoVivienda SET descripcion = ? WHERE idTipoVivienda = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tipoVivienda.getDescripcion());
+            ps.setInt(2, tipoVivienda.getId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
+    public boolean eliminar(int idTipoVivienda) throws SQLException {
+        String sql = "DELETE FROM TipoVivienda WHERE idTipoVivienda = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idTipoVivienda);
+            return ps.executeUpdate() > 0;
+        }
+    }
+    
 }

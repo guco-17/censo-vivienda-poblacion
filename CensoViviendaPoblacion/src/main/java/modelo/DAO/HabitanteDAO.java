@@ -32,16 +32,6 @@ public class HabitanteDAO{
         return h;
     }
     
-    private boolean eliminarActividadesHabitante(int idHabitante) throws SQLException {
-        String sql = "DELETE FROM Habitante_Actividad WHERE idHabitante = ?";
-
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idHabitante);
-            ps.executeUpdate();
-            return true; 
-        }
-    }
-    
     public ActividadEconomica mapearActividadEconomica(ResultSet rs) throws SQLException {
         ActividadEconomica a = new ActividadEconomica();
 
@@ -111,6 +101,7 @@ public class HabitanteDAO{
         String sql = "DELETE FROM Habitante WHERE codigoHabitante = ?";
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            
             ps.setInt(1, id);
             
             int filasAfectadas = ps.executeUpdate();

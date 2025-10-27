@@ -19,6 +19,29 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="menuCatalogos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Catalogos"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemTipoViviendaCRUD">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tipo de Vivienda"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemTipoViviendaCRUDActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemActividadesEconomicas">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Actividades Economicas"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemActividadesEconomicasActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="menuVivienda">
           <Properties>
             <Property name="text" type="java.lang.String" value="Vivienda"/>
