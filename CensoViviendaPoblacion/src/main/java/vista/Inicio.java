@@ -25,18 +25,23 @@ public class Inicio extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem2 = new javax.swing.JMenuItem();
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
         menuCatalogos = new javax.swing.JMenu();
         menuItemTipoViviendaCRUD = new javax.swing.JMenuItem();
         menuItemActividadesEconomicas = new javax.swing.JMenuItem();
+        menuMunicipios = new javax.swing.JMenuItem();
+        menuItemLocalidades = new javax.swing.JMenuItem();
         menuVivienda = new javax.swing.JMenu();
         menuItemGestionarVivienda = new javax.swing.JMenuItem();
         menuItemTablaViviendas = new javax.swing.JMenuItem();
         menuPoblacion = new javax.swing.JMenu();
         menuItemGestionHabitantes = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+
+        jMenuItem2.setText("jMenuItem2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,6 +74,22 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         menuCatalogos.add(menuItemActividadesEconomicas);
+
+        menuMunicipios.setText("Municipios");
+        menuMunicipios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuMunicipiosActionPerformed(evt);
+            }
+        });
+        menuCatalogos.add(menuMunicipios);
+
+        menuItemLocalidades.setText("Localidades");
+        menuItemLocalidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemLocalidadesActionPerformed(evt);
+            }
+        });
+        menuCatalogos.add(menuItemLocalidades);
 
         menuBar.add(menuCatalogos);
 
@@ -170,15 +191,30 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuItemActividadesEconomicasActionPerformed
 
+    private void menuMunicipiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMunicipiosActionPerformed
+        MunicipioCRUD m = new MunicipioCRUD(this.usuarioActual);
+        m.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuMunicipiosActionPerformed
+
+    private void menuItemLocalidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLocalidadesActionPerformed
+        LocalidadesCRUD l = new LocalidadesCRUD(this.usuarioActual);
+        l.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemLocalidadesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCatalogos;
     private javax.swing.JMenuItem menuItemActividadesEconomicas;
     private javax.swing.JMenuItem menuItemGestionHabitantes;
     private javax.swing.JMenuItem menuItemGestionarVivienda;
+    private javax.swing.JMenuItem menuItemLocalidades;
     private javax.swing.JMenuItem menuItemTablaViviendas;
     private javax.swing.JMenuItem menuItemTipoViviendaCRUD;
+    private javax.swing.JMenuItem menuMunicipios;
     private javax.swing.JMenu menuPoblacion;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;
