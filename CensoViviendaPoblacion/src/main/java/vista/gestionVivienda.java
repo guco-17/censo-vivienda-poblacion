@@ -110,7 +110,7 @@ public class gestionVivienda extends javax.swing.JFrame {
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
 
         lblViviendasTitulo.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         lblViviendasTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

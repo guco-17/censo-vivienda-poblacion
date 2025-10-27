@@ -1,6 +1,8 @@
 package vista;
 
+import javax.swing.JOptionPane;
 import modelo.Usuario;
+import modelo.ConexionDB;
 
 public class Inicio extends javax.swing.JFrame {
     private Usuario usuarioActual;
@@ -10,6 +12,34 @@ public class Inicio extends javax.swing.JFrame {
         this.usuarioActual = usuarioAutenticado;
         this.setTitle("Censo Estatal Coahuila 2025 - Bienvenido: " + usuarioAutenticado.getNombreUsuario());
         gestionarPermisos();
+    }
+    
+    public static void cerrarAplicacion(Usuario usuario) {
+        try {
+            if (usuario != null) {
+                System.out.println("Cerrando sesión del usuario: " + usuario.getNombreUsuario());
+                usuario = null; // Elimina referencia a usuario en memoria
+            }
+
+            if (ConexionDB.getInstance() != null) {
+                ConexionDB.getInstance().closeConnection();
+                System.out.println("Conexión a base de datos cerrada correctamente.");
+            }
+            
+
+            JOptionPane.showMessageDialog(null,
+                "Sesión cerrada y recursos liberados correctamente.\nSaliendo del sistema...",
+                "Cierre seguro",
+                JOptionPane.INFORMATION_MESSAGE);
+
+            System.exit(0);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                "Error al cerrar la aplicación: " + e.getMessage(),
+                "Error de cierre",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void gestionarPermisos() {
@@ -43,7 +73,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jMenuItem2.setText("jMenuItem2");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioActual);
 
         menuUsuarios.setText("Usuarios");
 

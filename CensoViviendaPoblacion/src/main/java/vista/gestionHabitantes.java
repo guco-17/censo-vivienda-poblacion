@@ -71,7 +71,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
 
         lblHabitantesTitulo.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         lblHabitantesTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

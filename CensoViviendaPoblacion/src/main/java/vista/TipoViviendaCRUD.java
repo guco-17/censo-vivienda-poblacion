@@ -72,7 +72,7 @@ public class TipoViviendaCRUD extends javax.swing.JFrame {
         menuInicio2 = new javax.swing.JMenu();
         menuItemInicio2 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
 
         LBLtITULO.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         LBLtITULO.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

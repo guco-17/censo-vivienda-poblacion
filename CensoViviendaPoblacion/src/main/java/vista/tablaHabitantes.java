@@ -31,7 +31,7 @@ public class tablaHabitantes extends javax.swing.JFrame {
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

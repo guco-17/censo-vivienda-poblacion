@@ -32,7 +32,7 @@ public class gestionUsuarios extends javax.swing.JFrame {
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
 
         lblUsuariosTitulo.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         lblUsuariosTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
