@@ -263,3 +263,15 @@ SELECT * FROM ActividadEconomica ORDER BY idActividadEconomica;
 
 
 SELECT * FROM Habitante;
+
+SELECT * FROM Habitante_Actividad;
+
+ALTER TABLE Habitante_Actividad
+DROP CONSTRAINT FK_HabAct_Habitante;
+GO
+
+ALTER TABLE Habitante_Actividad
+ADD CONSTRAINT FK_HabAct_Habitante FOREIGN KEY (idHabitante)
+    REFERENCES Habitante (idHabitante)
+    ON DELETE CASCADE;
+GO

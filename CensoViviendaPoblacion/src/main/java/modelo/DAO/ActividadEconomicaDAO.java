@@ -12,7 +12,7 @@ public class ActividadEconomicaDAO {
         this.conn = ConexionDB.getInstance().getConnection(); 
     }
     
-    private ActividadEconomica mapearActividadEconomica(ResultSet rs) throws SQLException{
+    public ActividadEconomica mapearActividadEconomica(ResultSet rs) throws SQLException{
         ActividadEconomica a = new ActividadEconomica();
         a.setId(rs.getInt("idActividadEconomica"));
         a.setDescripcion(rs.getString("descripcion"));

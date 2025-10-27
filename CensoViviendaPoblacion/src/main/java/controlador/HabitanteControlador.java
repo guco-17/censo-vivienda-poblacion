@@ -87,4 +87,8 @@ public class HabitanteControlador {
     public ArrayList<Habitante> obtenerTodosLosHabitantes(){
         return habitanteDAO.obtenerTodos(); 
     }
+    
+    public ArrayList<Habitante> obtenerTodosLosHabitantesConRelaciones() throws Exception {
+        return habitanteDAO.obtenerTodosConRelaciones();
+    }
 }

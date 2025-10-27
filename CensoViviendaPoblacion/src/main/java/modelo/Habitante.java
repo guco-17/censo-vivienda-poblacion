@@ -20,6 +20,10 @@ public class Habitante {
     //ATRIBUTOS DE LA LOGICA DE NEGOCIO
     private int edad;
     private ArrayList<ActividadEconomica> actividadesEconomicas;
+    private String calleVivienda;
+    private int codigoVivienda;
+    private String nombreLocalidad;
+    private String nombreMunicipio;
     
     //CONSTYRUCTOR VACIO
     public Habitante() {
@@ -144,5 +148,36 @@ public class Habitante {
     public void setActividadesEconomicas(ArrayList<ActividadEconomica> actividadesEconomicas) {
         this.actividadesEconomicas = actividadesEconomicas;
     }
-    
+
+    public String getCalleVivienda() {
+        return calleVivienda;
+    }
+
+    public void setCalleVivienda(String calleVivienda) {
+        this.calleVivienda = calleVivienda;
+    }
+
+    public int getCodigoVivienda() {
+        return codigoVivienda;
+    }
+
+    public void setCodigoVivienda(int codigoVivienda) {
+        this.codigoVivienda = codigoVivienda;
+    }
+
+    public String getNombreLocalidad() {
+        return nombreLocalidad;
+    }
+
+    public void setNombreLocalidad(String nombreLocalidad) {
+        this.nombreLocalidad = nombreLocalidad;
+    }
+
+    public String getNombreMunicipio() {
+        return nombreMunicipio;
+    }
+
+    public void setNombreMunicipio(String nombreMunicipio) {
+        this.nombreMunicipio = nombreMunicipio;
+    }
 }

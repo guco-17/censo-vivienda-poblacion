@@ -156,4 +156,28 @@ public class ViviendaDAO {
         }
         return -1; // Retorna -1 si no se encuentra
     }
+    
+    public ArrayList<Vivienda> obtenerTodosConRelaciones() throws Exception {
+        ArrayList<Vivienda> lista = new ArrayList<>();
+        String sql = "SELECT v.*, l.descripcion AS nombreLocalidad, tv.descripcion AS descripcionTipo, m.descripcion AS nombreMunicipio " +
+                 "FROM Vivienda v " +
+                 "JOIN Localidad l ON v.idLocalidad = l.idLocalidad " +
+                 "JOIN TipoVivienda tv ON v.idTipoVivienda = tv.idTipoVivienda " +
+                 "JOIN Municipio m ON v.idMunicipio = m.idMunicipio";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Vivienda v = mapearVivienda(rs);
+                v.setNombreLocalidad(rs.getString("nombreLocalidad")); 
+                v.setDescripcionTipoVivienda(rs.getString("descripcionTipo"));
+                v.setNombreMunicipio(rs.getString("nombreMunicipio"));
+                lista.add(v);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener todas las viviendas con relaciones: " + e.getMessage(), e);
+        }
+        return lista;
+    }
 }

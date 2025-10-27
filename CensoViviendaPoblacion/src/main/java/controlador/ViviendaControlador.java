@@ -50,4 +50,8 @@ public class ViviendaControlador {
         
         return viviendaDAO.eliminar(idVivienda);
     }
+    
+    public ArrayList<Vivienda> obtenerTodasLasViviendasConRelaciones() throws Exception {
+        return viviendaDAO.obtenerTodosConRelaciones();
+    }
 }

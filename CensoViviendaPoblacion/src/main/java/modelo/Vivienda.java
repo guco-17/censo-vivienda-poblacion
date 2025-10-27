@@ -19,6 +19,9 @@ public class Vivienda {
     //ATRIBUTOS DE LA LÓGICA DEL NEGOCIO.
     private ArrayList<Habitante> habitantes;
     private int totalHabitantes;
+    private String nombreLocalidad;
+    private String nombreMunicipio;
+    private String descripcionTipoVivienda;
 
     //CONSTRUCTOR VACÍO
     public Vivienda() {
@@ -151,5 +154,29 @@ public class Vivienda {
 
     public void setTotalHabitantes(int totalHabitantes) {
         this.totalHabitantes = totalHabitantes;
+    }
+
+    public String getNombreLocalidad() {
+        return nombreLocalidad;
+    }
+
+    public void setNombreLocalidad(String nombreLocalidad) {
+        this.nombreLocalidad = nombreLocalidad;
+    }
+
+    public String getNombreMunicipio() {
+        return nombreMunicipio;
+    }
+
+    public void setNombreMunicipio(String nombreMunicipio) {
+        this.nombreMunicipio = nombreMunicipio;
+    }
+    
+    public String getDescripcionTipoVivienda() {
+        return descripcionTipoVivienda;
+    }
+
+    public void setDescripcionTipoVivienda(String descripcionTipoVivienda) {
+        this.descripcionTipoVivienda = descripcionTipoVivienda;
     }
 }

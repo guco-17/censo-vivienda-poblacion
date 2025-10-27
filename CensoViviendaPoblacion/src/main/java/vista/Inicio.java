@@ -30,8 +30,10 @@ public class Inicio extends javax.swing.JFrame {
         usuariosGestionar = new javax.swing.JMenuItem();
         menuVivienda = new javax.swing.JMenu();
         menuItemGestionarVivienda = new javax.swing.JMenuItem();
+        menuItemTablaViviendas = new javax.swing.JMenuItem();
         menuPoblacion = new javax.swing.JMenu();
         menuItemGestionHabitantes = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,6 +59,14 @@ public class Inicio extends javax.swing.JFrame {
         });
         menuVivienda.add(menuItemGestionarVivienda);
 
+        menuItemTablaViviendas.setText("Tabla de Viviendas");
+        menuItemTablaViviendas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemTablaViviendasActionPerformed(evt);
+            }
+        });
+        menuVivienda.add(menuItemTablaViviendas);
+
         menuBar.add(menuVivienda);
 
         menuPoblacion.setText("Población");
@@ -68,6 +78,14 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         menuPoblacion.add(menuItemGestionHabitantes);
+
+        jMenuItem1.setText("Tabla de Habitantes");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuPoblacion.add(jMenuItem1);
 
         menuBar.add(menuPoblacion);
 
@@ -105,10 +123,24 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuItemGestionarViviendaActionPerformed
 
+    private void menuItemTablaViviendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTablaViviendasActionPerformed
+        tablaViviendas tabla = new tablaViviendas(this.usuarioActual);
+        tabla.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_menuItemTablaViviendasActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        tablaHabitantes tabla = new tablaHabitantes(this.usuarioActual);
+        tabla.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem menuItemGestionHabitantes;
     private javax.swing.JMenuItem menuItemGestionarVivienda;
+    private javax.swing.JMenuItem menuItemTablaViviendas;
     private javax.swing.JMenu menuPoblacion;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;
