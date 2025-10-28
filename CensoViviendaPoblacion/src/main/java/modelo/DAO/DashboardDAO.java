@@ -1,6 +1,7 @@
 package modelo.DAO;
 
 import java.sql.*;
+import java.util.*;
 import modelo.ConexionDB;
 
 public class DashboardDAO {
@@ -76,5 +77,21 @@ public class DashboardDAO {
             System.err.println("Error SQL al contar viviendas con servicios completos: " + e.getMessage());
         }
         return total;
+    }
+    
+    public Map<String, Integer> contarHabitantesPorGenero() {
+        Map<String, Integer> resultados = new HashMap<>();
+        String sql = "SELECT genero, COUNT(idHabitante) AS conteo FROM Habitante GROUP BY genero";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                resultados.put(rs.getString("genero"), rs.getInt("conteo"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al contar habitantes por género: " + e.getMessage());
+        }
+        return resultados;
     }
 }

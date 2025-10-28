@@ -2,6 +2,7 @@ package controlador;
 
 import modelo.DAO.DashboardDAO;
 import java.text.DecimalFormat;
+import java.util.*;
 
 public class DashboardControlador {
     private final DashboardDAO dashboardDAO;
@@ -21,5 +22,9 @@ public class DashboardControlador {
     
     public int obtenerViviendas() {
         return dashboardDAO.contarTotalViviendas();
+    }
+    
+    public Map<String, Integer> obtenerDistribucionPorGenero() {
+        return dashboardDAO.contarHabitantesPorGenero();
     }
 }
