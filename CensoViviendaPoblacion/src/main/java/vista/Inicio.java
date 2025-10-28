@@ -3,22 +3,26 @@ package vista;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
 import modelo.ConexionDB;
+import controlador.DashboardControlador;
 
 public class Inicio extends javax.swing.JFrame {
     private Usuario usuarioActual;
+    private final DashboardControlador dashboardControlador;
     
     public Inicio(Usuario usuarioAutenticado) {
         initComponents();
         this.usuarioActual = usuarioAutenticado;
+        this.dashboardControlador = new DashboardControlador();
         this.setTitle("Censo Estatal Coahuila 2025 - Bienvenido: " + usuarioAutenticado.getNombreUsuario());
         gestionarPermisos();
+        cargarKPIs();
     }
     
     public static void cerrarAplicacion(Usuario usuario) {
         try {
             if (usuario != null) {
                 System.out.println("Cerrando sesión del usuario: " + usuario.getNombreUsuario());
-                usuario = null; // Elimina referencia a usuario en memoria
+                usuario = null;
             }
 
             if (ConexionDB.getInstance() != null) {
@@ -43,11 +47,36 @@ public class Inicio extends javax.swing.JFrame {
     }
     
     private void gestionarPermisos() {
-        // Ejemplo de lógica para deshabilitar o habilitar menús
         String rol = usuarioActual.getRol();
         
         if (!"admin".equals(rol.toLowerCase().trim())) {
+            menuBar.setVisible(false);
+        }
+    }
+    
+    private void cargarKPIs() {
+        try {
+            // KPI 1: Población Total
+            int totalHabitantes = dashboardControlador.obtenerPoblacionTotal();
+            poblacionTotalKPI.setText(String.valueOf(totalHabitantes));
             
+            // KPI 2: Total de Viviendas
+            int totalVivienda = dashboardControlador.obtenerViviendas();
+            viviendaServicios.setText(String.valueOf(totalVivienda)); 
+            
+            // KPI 2: Población Económicamente Activa (PEA)
+            int pea = dashboardControlador.obtenerPoblacionActivaEconomica();
+            poblacionActivaEconomicaKPI.setText(String.valueOf(pea)); 
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error al cargar los datos del Dashboard: " + e.getMessage(), 
+                    "Error de Conexión", 
+                    JOptionPane.ERROR_MESSAGE);
+            // Mostrar errores en los KPIs
+            poblacionTotalKPI.setText("N/A");
+            poblacionActivaEconomicaKPI.setText("N/A");
+            viviendaServicios.setText("N/A");
         }
     }
     
@@ -61,6 +90,16 @@ public class Inicio extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        lblViviendasServicios = new javax.swing.JLabel();
+        viviendaServicios = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        lblPoblacionTotal = new javax.swing.JLabel();
+        poblacionTotalKPI = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        lblPobEconomAct = new javax.swing.JLabel();
+        poblacionActivaEconomicaKPI = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
@@ -90,7 +129,7 @@ public class Inicio extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 831, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,24 +148,141 @@ public class Inicio extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         jLabel3.setText("Versión 1.0");
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(250, 100));
+
+        lblViviendasServicios.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblViviendasServicios.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblViviendasServicios.setText("Total de Viviendas");
+
+        viviendaServicios.setFont(new java.awt.Font("Gadugi", 0, 36)); // NOI18N
+        viviendaServicios.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        viviendaServicios.setText("0000");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblViviendasServicios, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(viviendaServicios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(viviendaServicios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblViviendasServicios)
+                .addContainerGap())
+        );
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setPreferredSize(new java.awt.Dimension(250, 125));
+
+        lblPoblacionTotal.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblPoblacionTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPoblacionTotal.setText("Población total");
+
+        poblacionTotalKPI.setFont(new java.awt.Font("Gadugi", 0, 36)); // NOI18N
+        poblacionTotalKPI.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        poblacionTotalKPI.setText("0000");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPoblacionTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(poblacionTotalKPI, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(poblacionTotalKPI, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPoblacionTotal)
+                .addContainerGap())
+        );
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setPreferredSize(new java.awt.Dimension(250, 100));
+
+        lblPobEconomAct.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblPobEconomAct.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPobEconomAct.setText("Población economicamente activa");
+
+        poblacionActivaEconomicaKPI.setFont(new java.awt.Font("Gadugi", 0, 36)); // NOI18N
+        poblacionActivaEconomicaKPI.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        poblacionActivaEconomicaKPI.setText("0000");
+        poblacionActivaEconomicaKPI.setPreferredSize(new java.awt.Dimension(250, 125));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPobEconomAct, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(poblacionActivaEconomicaKPI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(poblacionActivaEconomicaKPI, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblPobEconomAct)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(99, 99, 99))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addGap(0, 667, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addGap(0, 440, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                .addGap(506, 506, 506))
         );
 
         menuUsuarios.setText("Usuarios");
@@ -224,7 +380,7 @@ public class Inicio extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -298,7 +454,14 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblPobEconomAct;
+    private javax.swing.JLabel lblPoblacionTotal;
+    private javax.swing.JLabel lblViviendasServicios;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCatalogos;
     private javax.swing.JMenuItem menuItemActividadesEconomicas;
@@ -311,6 +474,9 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JMenu menuPoblacion;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;
+    private javax.swing.JLabel poblacionActivaEconomicaKPI;
+    private javax.swing.JLabel poblacionTotalKPI;
     private javax.swing.JMenuItem usuariosGestionar;
+    private javax.swing.JLabel viviendaServicios;
     // End of variables declaration//GEN-END:variables
 }
