@@ -27,4 +27,12 @@ public class DashboardControlador {
     public Map<String, Integer> obtenerDistribucionPorGenero() {
         return dashboardDAO.contarHabitantesPorGenero();
     }
+    
+    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio() {
+        return dashboardDAO.obtenerNivelEducativoPorMunicipio();
+    }
+    
+    public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
+        return dashboardDAO.obtenerTop5ActividadesEconomicas();
+    }
 }

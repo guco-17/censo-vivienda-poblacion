@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 import modelo.Usuario;
 import modelo.ConexionDB;
 import controlador.DashboardControlador;
+import java.awt.BorderLayout;
 
 public class Inicio extends javax.swing.JFrame {
     private Usuario usuarioActual;
@@ -16,6 +17,7 @@ public class Inicio extends javax.swing.JFrame {
         this.setTitle("Censo Estatal Coahuila 2025 - Bienvenido: " + usuarioAutenticado.getNombreUsuario());
         gestionarPermisos();
         cargarKPIs();
+        cargarGraficoHombresMujeres();
         cargarGraficoDashboard();
     }
     
@@ -81,22 +83,34 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
     
-    private void cargarGraficoDashboard() {
+    private void cargarGraficoHombresMujeres() {
+        //GRAFICO HOMBRES Y MUJERES
         // Limpiar panel
         panelGraficoGenero.removeAll(); 
 
         // instancia del gráfico
-        GraficoGenero grafico = new GraficoGenero(); 
+        GraficoGenero graficoHmbresMujeres = new GraficoGenero(); 
 
         //Configurar el tamaño y añadir al contenedor
-        grafico.setSize(panelGraficoGenero.getSize());
-        panelGraficoGenero.add(grafico);
+        graficoHmbresMujeres.setSize(panelGraficoGenero.getSize());
+        panelGraficoGenero.add(graficoHmbresMujeres);
 
         //Repintar el panel contenedor
         panelGraficoGenero.revalidate();
         panelGraficoGenero.repaint();
     }
     
+    private void cargarGraficoDashboard() {
+        graficoActEconom.removeAll(); 
+
+        GraficoActividadEconomica graficoActividad = new GraficoActividadEconomica(); 
+
+        graficoActividad.setSize(graficoActEconom.getSize());
+        graficoActEconom.add(graficoActividad, BorderLayout.CENTER); 
+
+        graficoActEconom.revalidate();
+        graficoActEconom.repaint();
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -118,6 +132,7 @@ public class Inicio extends javax.swing.JFrame {
         lblPobEconomAct = new javax.swing.JLabel();
         poblacionActivaEconomicaKPI = new javax.swing.JLabel();
         panelGraficoGenero = new javax.swing.JPanel();
+        graficoActEconom = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
@@ -276,6 +291,10 @@ public class Inicio extends javax.swing.JFrame {
             .addGap(0, 307, Short.MAX_VALUE)
         );
 
+        graficoActEconom.setBackground(new java.awt.Color(255, 255, 255));
+        graficoActEconom.setPreferredSize(new java.awt.Dimension(327, 307));
+        graficoActEconom.setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -287,10 +306,13 @@ public class Inicio extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(panelGraficoGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(graficoActEconom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3))
-                            .addComponent(panelGraficoGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -315,8 +337,10 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(panelGraficoGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(175, 175, 175))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelGraficoGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(graficoActEconom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(114, 114, 114))
         );
 
         menuUsuarios.setText("Usuarios");
@@ -421,7 +445,7 @@ public class Inicio extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -482,6 +506,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemLocalidadesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel graficoActEconom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

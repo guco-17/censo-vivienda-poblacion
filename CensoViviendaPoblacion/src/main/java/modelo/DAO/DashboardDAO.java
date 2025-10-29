@@ -62,23 +62,7 @@ public class DashboardDAO {
         return total;
     }
     
-    public int contarViviendasConServiciosCompletos() {
-        int total = 0;
-        String sql = "SELECT COUNT(idVivienda) AS total FROM Vivienda " +
-                     "WHERE tieneAgua = 'S' AND tieneLuz = 'S' AND tieneGas = 'S'";
-        
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
-            if (rs.next()) {
-                total = rs.getInt("total");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error SQL al contar viviendas con servicios completos: " + e.getMessage());
-        }
-        return total;
-    }
-    
+    // CONTAR HABITANTES POR GÉNERO GRÁFICA KPI
     public Map<String, Integer> contarHabitantesPorGenero() {
         Map<String, Integer> resultados = new HashMap<>();
         String sql = "SELECT genero, COUNT(idHabitante) AS conteo FROM Habitante GROUP BY genero";
@@ -91,6 +75,50 @@ public class DashboardDAO {
             }
         } catch (SQLException e) {
             System.err.println("Error SQL al contar habitantes por género: " + e.getMessage());
+        }
+        return resultados;
+    }
+    
+    //GRÁFICA DE EDUCACIÓN POR MUNICIPIO.
+    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio() {
+        Map<String, Map<String, Integer>> resultados = new HashMap<>();
+
+        String sql = "SELECT h.nivelEducacion, m.descripcion AS nombreMunicipio, COUNT(h.idHabitante) AS conteo FROM Habitante h JOIN Vivienda v ON h.idVivienda = v.idVivienda JOIN Municipio m ON v.idMunicipio = m.idMunicipio WHERE h.nivelEducacion IS NOT NULL AND h.nivelEducacion <> '' GROUP BY h.nivelEducacion, m.descripcion ORDER BY m.descripcion, h.nivelEducacion"; 
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String nivel = rs.getString("nivelEducacion");
+                String municipio = rs.getString("nombreMunicipio");
+                int conteo = rs.getInt("conteo");
+
+                resultados.putIfAbsent(nivel, new HashMap<>());
+
+                resultados.get(nivel).put(municipio, conteo);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener nivel educativo por municipio: " + e.getMessage());
+        }
+        return resultados;
+    }
+    
+    //TOP 5 ACTIVIDADES ECONÓMICAS
+    public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
+        Map<String, Integer> resultados = new LinkedHashMap<>();
+        
+        String sql = "SELECT TOP 5 ae.descripcion AS nombreActividad, COUNT(ha.idHabitante) AS conteo FROM Habitante_Actividad ha JOIN ActividadEconomica ae ON ha.idActividadEconomica = ae.idActividadEconomica GROUP BY ae.descripcion ORDER BY conteo DESC;";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String nombreActividad = rs.getString("nombreActividad");
+                int conteo = rs.getInt("conteo");
+                resultados.put(nombreActividad, conteo);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener el Top 5 de actividades económicas: " + e.getMessage());
         }
         return resultados;
     }
