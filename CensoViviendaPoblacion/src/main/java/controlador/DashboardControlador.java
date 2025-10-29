@@ -35,4 +35,8 @@ public class DashboardControlador {
     public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
         return dashboardDAO.obtenerTop5ActividadesEconomicas();
     }
+    
+    public List<Map<String, Object>> obtenerTablaHabitantesViviendas(String nombreMunicipio) {
+        return dashboardDAO.obtenerHabitantesPorVivienda(nombreMunicipio);
+    }
 }

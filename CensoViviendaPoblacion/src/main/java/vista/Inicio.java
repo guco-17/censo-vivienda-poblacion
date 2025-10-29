@@ -133,6 +133,7 @@ public class Inicio extends javax.swing.JFrame {
         poblacionActivaEconomicaKPI = new javax.swing.JLabel();
         panelGraficoGenero = new javax.swing.JPanel();
         graficoActEconom = new javax.swing.JPanel();
+        btnHabitantesVivienda = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuUsuarios = new javax.swing.JMenu();
         usuariosGestionar = new javax.swing.JMenuItem();
@@ -162,7 +163,7 @@ public class Inicio extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,6 +296,13 @@ public class Inicio extends javax.swing.JFrame {
         graficoActEconom.setPreferredSize(new java.awt.Dimension(327, 307));
         graficoActEconom.setLayout(new java.awt.BorderLayout());
 
+        btnHabitantesVivienda.setText("HABITANTES POR VIVIENDA");
+        btnHabitantesVivienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHabitantesViviendaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -321,6 +329,10 @@ public class Inicio extends javax.swing.JFrame {
                                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(btnHabitantesVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,7 +352,9 @@ public class Inicio extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelGraficoGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(graficoActEconom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(114, 114, 114))
+                .addGap(18, 18, 18)
+                .addComponent(btnHabitantesVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58))
         );
 
         menuUsuarios.setText("Usuarios");
@@ -505,7 +519,14 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuItemLocalidadesActionPerformed
 
+    private void btnHabitantesViviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHabitantesViviendaActionPerformed
+        reporteHabitantesVivienda reporte = new reporteHabitantesVivienda(this.usuarioActual);
+        reporte.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnHabitantesViviendaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHabitantesVivienda;
     private javax.swing.JPanel graficoActEconom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
