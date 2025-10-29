@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 public class GraficoGenero extends javax.swing.JPanel {
@@ -25,9 +26,18 @@ public class GraficoGenero extends javax.swing.JPanel {
 
         DefaultPieDataset dataset = new DefaultPieDataset();
         for (Map.Entry<String, Integer> entry : datos.entrySet()) {
-            String etiqueta = entry.getKey().equals("M") ? "Masculino" : 
-                              entry.getKey().equals("F") ? "Femenino" : "Otro";
-            dataset.setValue(etiqueta, entry.getValue());
+            String claveGenero = entry.getKey();
+            int conteo = entry.getValue();
+
+            if (claveGenero != null) {
+                String claveEstandarizada = claveGenero.trim().toUpperCase();
+
+                if ("H".equals(claveEstandarizada)) {
+                    dataset.setValue("Masculino", conteo);
+                } else if ("M".equals(claveEstandarizada)) {
+                    dataset.setValue("Femenino", conteo);
+                }
+            }
         }
 
         JFreeChart chart = ChartFactory.createPieChart(
@@ -40,12 +50,21 @@ public class GraficoGenero extends javax.swing.JPanel {
 
         //Personalización
         chart.setBackgroundPaint(Color.white);
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setSectionPaint("Masculino", new Color(54, 162, 235)); // Azul
+        plot.setSectionPaint("Femenino", new Color(255, 105, 180)); // Rosa
+
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlineVisible(false);
+        plot.setLabelBackgroundPaint(Color.WHITE);
+        plot.setLabelOutlinePaint(null);
+        plot.setLabelShadowPaint(null);
         
-        // 4. CREAR EL PANEL DE JFreeChart PARA INTEGRARLO EN SWING
         ChartPanel chartPanel = new ChartPanel(chart);
-        
-        // 5. AÑADIR EL PANEL DEL GRÁFICO AL JPanel
+        removeAll();
         add(chartPanel, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
     
     @SuppressWarnings("unchecked")
