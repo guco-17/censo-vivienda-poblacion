@@ -35,10 +35,8 @@ public class HabitanteDAO{
     public ActividadEconomica mapearActividadEconomica(ResultSet rs) throws SQLException {
         ActividadEconomica a = new ActividadEconomica();
 
-        // 1. Mapear el ID
         a.setId(rs.getInt("idActividadEconomica"));
 
-        // 2. 💥 CORRECCIÓN: Leer el valor de la columna "descripcion"
         a.setDescripcion(rs.getString("descripcion")); 
 
         return a;

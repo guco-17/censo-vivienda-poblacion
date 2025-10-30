@@ -103,7 +103,7 @@ public class DashboardDAO {
         return resultados;
     }
     
-    //TOP 5 ACTIVIDADES ECONÓMICAS
+    //GRÁFICO TOP 5 ACTIVIDADES ECONÓMICAS
     public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
         Map<String, Integer> resultados = new LinkedHashMap<>();
         
@@ -123,6 +123,7 @@ public class DashboardDAO {
         return resultados;
     }
     
+    //TABLA HABITANTES POR VIVIENDA
     public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio) {
         List<Map<String, Object>> resultados = new ArrayList<>();
 
@@ -173,4 +174,20 @@ public class DashboardDAO {
         return resultados;
     }
     
+    //PROMEDIO DE HABITANTES POR VIVIENDA
+    public double promedioHabitantesPorVivienda(){
+        double promedio = 0;
+        String sql = "SELECT CAST(COUNT(H.idHabitante) AS DECIMAL(10, 2)) / CAST(COUNT(DISTINCT V.idVivienda) AS DECIMAL(10, 2)) AS promedio FROM Vivienda V INNER JOIN Habitante H ON V.idVivienda = H.idVivienda;";
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            if (rs.next()) {
+                promedio = rs.getInt("promedio");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al contar total de viviendas: " + e.getMessage());
+        }
+        return promedio;
+    }
 }

@@ -3,13 +3,17 @@ package controlador;
 import modelo.DAO.DashboardDAO;
 import java.text.DecimalFormat;
 import java.util.*;
+import modelo.DAO.MunicipioDAO;
+import modelo.Municipio;
 
 public class DashboardControlador {
     private final DashboardDAO dashboardDAO;
+    private final MunicipioDAO municipioDAO;
     private final DecimalFormat df = new DecimalFormat("#.00");
     
     public DashboardControlador() {
         this.dashboardDAO = new DashboardDAO();
+        this.municipioDAO = new MunicipioDAO();
     }
     
     public int obtenerPoblacionTotal() {
@@ -38,5 +42,13 @@ public class DashboardControlador {
     
     public List<Map<String, Object>> obtenerTablaHabitantesViviendas(String nombreMunicipio) {
         return dashboardDAO.obtenerHabitantesPorVivienda(nombreMunicipio);
+    }
+    
+    public ArrayList<Municipio> obtenerNombresMunicipios() {
+        return municipioDAO.obtenerTodos();
+    }
+    
+    public double promedioHabitantesPorVivienda() {
+        return dashboardDAO.promedioHabitantesPorVivienda();
     }
 }
