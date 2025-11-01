@@ -245,4 +245,163 @@ public class DashboardDAO {
         }
         return resultados;
     }
+    
+    public Map<String, Integer> serviciosBasicosMunicipio(String nombreMunicipio){
+        Map<String, Integer> resultados = new LinkedHashMap<>();
+        
+        String sql = "SELECT " +
+                     "   COUNT(V.idVivienda) AS total_viviendas, " +
+                     "   SUM(CASE WHEN V.tieneAgua = 'SI' THEN 1 ELSE 0 END) AS con_agua, " +
+                     "   SUM(CASE WHEN V.tieneLuz = 'SI' THEN 1 ELSE 0 END) AS con_luz, " +
+                     "   SUM(CASE WHEN V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS con_gas " +
+                     "FROM Vivienda V " +
+                     "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
+            ps.setString(1, filtro);
+            ps.setString(2, filtro);
+            ps.setString(3, filtro);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    resultados.put("Total Viviendas", rs.getInt("total_viviendas"));
+                    resultados.put("Viviendas con Agua", rs.getInt("con_agua"));
+                    resultados.put("Viviendas con Luz", rs.getInt("con_luz"));
+                    resultados.put("Viviendas con Gas", rs.getInt("con_gas"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener el reporte de servicios básicos: " + e.getMessage());
+        }
+        return resultados;
+    }
+    
+    public double porcentajeViviendasConServiciosCompletos(String nombreMunicipio) {
+        double porcentaje = 0.0;
+
+        String sql = "SELECT " +
+                     "   COALESCE( " +
+                     "       ROUND( " +
+                     "           CAST(SUM(CASE WHEN V.tieneAgua = 'SI' AND V.tieneLuz = 'SI' AND V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS DECIMAL(10, 2)) " +
+                     "           * 100.0 / NULLIF(CAST(COUNT(V.idVivienda) AS DECIMAL(10, 2)), 0), " +
+                     "           2 " +
+                     "       ), 0.0) AS porcentaje_con_todos_servicios " +
+                     "FROM Vivienda V " +
+                     "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
+            ps.setString(1, filtro);
+            ps.setString(2, filtro);
+            ps.setString(3, filtro);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    porcentaje = rs.getDouble("porcentaje_con_todos_servicios");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener el porcentaje de viviendas con servicios completos: " + e.getMessage());
+        }
+        return porcentaje;
+    }
+    
+    //KPI POBLACIÓN TOTAL POR MUNICIPIO
+    public int contarTotalHabitantesMunicipio(String nombreMunicipio) {
+        int total = 0;
+
+        String sql = "SELECT COUNT(h.idHabitante) AS total " +
+                     "FROM Habitante h " +
+                     "INNER JOIN Vivienda v ON h.idVivienda = v.idVivienda " +
+                     "INNER JOIN Municipio m ON v.idMunicipio = m.idMunicipio " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR m.descripcion = ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
+
+            ps.setString(1, filtro);
+            ps.setString(2, filtro);
+            ps.setString(3, filtro);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al contar el total de habitantes con filtro: " + e.getMessage());
+        }
+        return total;
+    }
+    
+    public Map<String, Integer> top5MunicipiosMasPoblados() {
+        Map<String, Integer> resultados = new LinkedHashMap<>();
+
+        String sql = "SELECT TOP 5 m.descripcion AS municipio, COUNT(h.idHabitante) AS poblacion " +
+                     "FROM Municipio m " +
+                     "JOIN Vivienda v ON m.idMunicipio = v.idMunicipio " +
+                     "JOIN Habitante h ON v.idVivienda = h.idVivienda " +
+                     "GROUP BY m.descripcion " +
+                     "ORDER BY poblacion DESC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String municipio = rs.getString("municipio");
+                int poblacion = rs.getInt("poblacion");
+                resultados.put(municipio, poblacion);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener el Top 5 de municipios más poblados: " + e.getMessage());
+        }
+        return resultados;
+    }
+    
+    public Map<String, Double> distribucionPorEdad() {
+        Map<String, Double> resultados = new LinkedHashMap<>();
+
+        String sql = "SELECT " +
+                     "    CASE " +
+                     "        WHEN edad BETWEEN 0 AND 14 THEN '0-14 Niños/Adolescentes' " +
+                     "        WHEN edad BETWEEN 15 AND 24 THEN '15-24 Jóvenes' " +
+                     "        WHEN edad BETWEEN 25 AND 44 THEN '25-44 Adultos' " +
+                     "        WHEN edad BETWEEN 45 AND 64 THEN '45-64 Adultos Mayores' " +
+                     "        ELSE '65+ Adultos de la 3ra Edad' " +
+                     "    END as grupo_edad, " +
+                     "    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Habitante), 2) as porcentaje " +
+                     "FROM ( " +
+                     "    SELECT DATEDIFF(YEAR, fechaNacimiento, GETDATE()) as edad " +
+                     "    FROM Habitante " +
+                     ") as edades " +
+                     "GROUP BY " +
+                     "    CASE " +
+                     "        WHEN edad BETWEEN 0 AND 14 THEN '0-14 Niños/Adolescentes' " +
+                     "        WHEN edad BETWEEN 15 AND 24 THEN '15-24 Jóvenes' " +
+                     "        WHEN edad BETWEEN 25 AND 44 THEN '25-44 Adultos' " +
+                     "        WHEN edad BETWEEN 45 AND 64 THEN '45-64 Adultos Mayores' " +
+                     "        ELSE '65+ Adultos de la 3ra Edad' " +
+                     "    END " +
+                     "ORDER BY MIN(edad)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String grupoEdad = rs.getString("grupo_edad");
+                double porcentaje = rs.getDouble("porcentaje");
+                resultados.put(grupoEdad, porcentaje);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener la distribución por edad: " + e.getMessage());
+        }
+        return resultados;
+    }
+    
 }

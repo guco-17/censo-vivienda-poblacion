@@ -55,4 +55,24 @@ public class DashboardControlador {
     public Map<String, Integer> obtenerHabitantesPorTipoVivienda(String nombreMunicipio) {
         return dashboardDAO.obtenerHabitantesPorTipoVivienda(nombreMunicipio);
     }
+    
+    public Map<String, Integer> obtenerserviciosBasicosMunicipio (String nombreMunicipio) {
+        return dashboardDAO.serviciosBasicosMunicipio(nombreMunicipio);
+    }
+    
+    public double obtenerPorcentajeViviendasConServiciosCompletos(String nombreMunicipio) {
+        return dashboardDAO.porcentajeViviendasConServiciosCompletos(nombreMunicipio);
+    }
+    
+    public int obtenerPoblacionMunicipio(String nombreMunicipio) {
+        return dashboardDAO.contarTotalHabitantesMunicipio(nombreMunicipio);
+    }
+    
+    public Map<String, Integer> obtenerTop5MunicipiosMasPoblados() {
+        return dashboardDAO.top5MunicipiosMasPoblados();
+    }
+    
+    public Map<String, Double> obtenerDistribucionPorEdad() {
+        return dashboardDAO.distribucionPorEdad();
+    }
 }
