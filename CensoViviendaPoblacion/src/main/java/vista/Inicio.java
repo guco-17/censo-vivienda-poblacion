@@ -520,7 +520,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemLocalidadesActionPerformed
 
     private void btnHabitantesViviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHabitantesViviendaActionPerformed
-        reporteHabitantesVivienda reporte = new reporteHabitantesVivienda(this.usuarioActual);
+        Reporte reporte = new Reporte(this.usuarioActual);
         reporte.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnHabitantesViviendaActionPerformed
