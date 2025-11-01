@@ -32,8 +32,8 @@ public class DashboardControlador {
         return dashboardDAO.contarHabitantesPorGenero();
     }
     
-    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio() {
-        return dashboardDAO.obtenerNivelEducativoPorMunicipio();
+    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio(String nombreMunicipio) {
+        return dashboardDAO.obtenerNivelEducativoPorMunicipio(nombreMunicipio);
     }
     
     public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
@@ -48,7 +48,11 @@ public class DashboardControlador {
         return municipioDAO.obtenerTodos();
     }
     
-    public double promedioHabitantesPorVivienda() {
-        return dashboardDAO.promedioHabitantesPorVivienda();
+    public double promedioHabitantesPorVivienda(String nombreMunicipio) {
+        return dashboardDAO.promedioHabitantesPorVivienda(nombreMunicipio);
+    }
+    
+    public Map<String, Integer> obtenerHabitantesPorTipoVivienda(String nombreMunicipio) {
+        return dashboardDAO.obtenerHabitantesPorTipoVivienda(nombreMunicipio);
     }
 }

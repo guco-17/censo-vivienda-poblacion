@@ -16,15 +16,17 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class GraficoNivelEducativo extends javax.swing.JPanel {
     private final DashboardControlador controlador;
+    private final String filtroMunicipio;
     
-    public GraficoNivelEducativo() {
+    public GraficoNivelEducativo(String municipio) {
         initComponents();
         this.controlador = new DashboardControlador();
+        this.filtroMunicipio = municipio;
         cargarGrafico();
     }
     
     private void cargarGrafico() {
-        Map<String, Map<String, Integer>> datos = controlador.obtenerNivelEducativoPorMunicipio();
+        Map<String, Map<String, Integer>> datos = controlador.obtenerNivelEducativoPorMunicipio(filtroMunicipio);
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -41,7 +43,7 @@ public class GraficoNivelEducativo extends javax.swing.JPanel {
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
-            "Capital Humano: Nivel Educativo por Municipio",
+            "Nivel Educativo por Municipio",
             "Municipio",
             "No. de Habitantes",
             dataset,
@@ -73,6 +75,7 @@ public class GraficoNivelEducativo extends javax.swing.JPanel {
         for (int i = 0; i < dataset.getRowCount(); i++) {
             renderer.setSeriesPaint(i, colores[i % colores.length]);
         }
+        
 
         ChartPanel chartPanel = new ChartPanel(chart);
         removeAll();

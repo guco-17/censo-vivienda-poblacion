@@ -2,6 +2,7 @@ package vista;
 
 import controlador.DashboardControlador;
 import java.awt.BorderLayout;
+import java.awt.HeadlessException;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,36 +14,52 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
     private final DashboardControlador controlador;
     
     private final String[] COLUMNAS_REPORTE = {
-        "Código Vivienda", "Municipio", "Colonia", "Calle", "Habitantes", "Nombres Detallados"
+        "Código Vivienda", "Municipio", "Colonia", "Calle", "Habitantes", "Nombres Detallados", "Act. Económicas"
     };
 
     public reporteHabitantesVivienda(Usuario usuarioAutenticado) {
         initComponents();
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setResizable(false);
         this.usuarioSesion = usuarioAutenticado;
         this.controlador = new DashboardControlador();
-        cargarGraficoNivelEducativo();
         cargarMunicipios();
+        cargarGraficoNivelEducativo(null);
         inicializarTabla();
         ajustarAnchoColumnas();
         cargarDatosTabla(null);
-        cargarKPIs();
+        cargarKPIs(null);
+        cargarGraficoTipoVivienda(null);
     }
     
-    private void cargarKPIs(){
-        double promedioHabitanteVivienda = controlador.promedioHabitantesPorVivienda();
+    private void cargarKPIs(String municipioSeleccionado){
+        double promedioHabitanteVivienda = controlador.promedioHabitantesPorVivienda(municipioSeleccionado);
             lblPromedioHabitanteVivienda.setText(String.valueOf(promedioHabitanteVivienda)); 
     }
     
-    private void cargarGraficoNivelEducativo() {
+    private void cargarGraficoNivelEducativo(String municipioSeleccionado) {
         nivelEducativoPanel.removeAll(); 
 
-        GraficoActividadEconomica graficoNivelEducativo = new GraficoActividadEconomica(); 
+        GraficoNivelEducativo graficoNivelEducativo = new GraficoNivelEducativo(municipioSeleccionado); 
 
         graficoNivelEducativo.setSize(nivelEducativoPanel.getSize());
         nivelEducativoPanel.add(graficoNivelEducativo, BorderLayout.CENTER); 
 
         nivelEducativoPanel.revalidate();
         nivelEducativoPanel.repaint();
+    }
+    
+    private void cargarGraficoTipoVivienda(String municipioSeleccionado) {
+        panellHabitantesTipoVivienda.removeAll(); 
+
+        // Asegúrate de que este es el nombre que le diste a tu JPanel
+        GraficoHabitantesTipoVivienda grafico = new GraficoHabitantesTipoVivienda(municipioSeleccionado); 
+
+        grafico.setSize(panellHabitantesTipoVivienda.getSize());
+        panellHabitantesTipoVivienda.add(grafico, BorderLayout.CENTER); 
+
+        panellHabitantesTipoVivienda.revalidate();
+        panellHabitantesTipoVivienda.repaint();
     }
     
     private void cargarMunicipios() {
@@ -120,13 +137,13 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
                 nuevaFila[3] = fila.get("calle");
                 nuevaFila[4] = fila.get("totalHabitantes");
                 nuevaFila[5] = fila.get("nombresDetallados");
+                nuevaFila[6] = fila.get("actividadesEconomicas");
 
                 modelo.addRow(nuevaFila);
             }
 
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(this, "Error al cargar los datos: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
     }
     
@@ -138,12 +155,13 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
         cboFiltro = new javax.swing.JComboBox<>();
         lblTitulo = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaResultados = new javax.swing.JTable();
         nivelEducativoPanel = new javax.swing.JPanel();
         panelPromedioHabitantesVivienda = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblPromedioHabitanteVivienda = new javax.swing.JLabel();
+        panellHabitantesTipoVivienda = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaResultados = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
@@ -178,7 +196,7 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -196,30 +214,17 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(tablaResultados);
-
         nivelEducativoPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout nivelEducativoPanelLayout = new javax.swing.GroupLayout(nivelEducativoPanel);
         nivelEducativoPanel.setLayout(nivelEducativoPanelLayout);
         nivelEducativoPanelLayout.setHorizontalGroup(
             nivelEducativoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 410, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         nivelEducativoPanelLayout.setVerticalGroup(
             nivelEducativoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 261, Short.MAX_VALUE)
+            .addGap(0, 243, Short.MAX_VALUE)
         );
 
         panelPromedioHabitantesVivienda.setBackground(new java.awt.Color(255, 255, 255));
@@ -228,7 +233,7 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("PROMEDIO DE HABITANTES POR VIVIENDA");
 
-        lblPromedioHabitanteVivienda.setFont(new java.awt.Font("Gadugi", 0, 56)); // NOI18N
+        lblPromedioHabitanteVivienda.setFont(new java.awt.Font("Gadugi", 0, 36)); // NOI18N
         lblPromedioHabitanteVivienda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPromedioHabitanteVivienda.setText("0.0");
 
@@ -239,7 +244,7 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
             .addGroup(panelPromedioHabitantesViviendaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPromedioHabitantesViviendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
                     .addComponent(lblPromedioHabitanteVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -252,6 +257,33 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap())
         );
+
+        panellHabitantesTipoVivienda.setBackground(new java.awt.Color(255, 255, 255));
+        panellHabitantesTipoVivienda.setPreferredSize(new java.awt.Dimension(410, 0));
+
+        javax.swing.GroupLayout panellHabitantesTipoViviendaLayout = new javax.swing.GroupLayout(panellHabitantesTipoVivienda);
+        panellHabitantesTipoVivienda.setLayout(panellHabitantesTipoViviendaLayout);
+        panellHabitantesTipoViviendaLayout.setHorizontalGroup(
+            panellHabitantesTipoViviendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 410, Short.MAX_VALUE)
+        );
+        panellHabitantesTipoViviendaLayout.setVerticalGroup(
+            panellHabitantesTipoViviendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 227, Short.MAX_VALUE)
+        );
+
+        tablaResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaResultados);
 
         menuInicio.setText("Inicio");
 
@@ -274,25 +306,29 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
             .addComponent(panelFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nivelEducativoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panellHabitantesTipoVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(nivelEducativoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(panelPromedioHabitantesVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nivelEducativoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelPromedioHabitantesVivienda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelPromedioHabitantesVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(nivelEducativoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panellHabitantesTipoVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -307,6 +343,9 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         String municipioSeleccionado = (String) cboFiltro.getSelectedItem();
         cargarDatosTabla(municipioSeleccionado);
+        cargarKPIs(municipioSeleccionado);
+        cargarGraficoNivelEducativo(municipioSeleccionado);
+        cargarGraficoTipoVivienda(municipioSeleccionado);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void cboFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltroActionPerformed
@@ -326,6 +365,7 @@ public class reporteHabitantesVivienda extends javax.swing.JFrame {
     private javax.swing.JPanel nivelEducativoPanel;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelPromedioHabitantesVivienda;
+    private javax.swing.JPanel panellHabitantesTipoVivienda;
     private javax.swing.JTable tablaResultados;
     // End of variables declaration//GEN-END:variables
 }
