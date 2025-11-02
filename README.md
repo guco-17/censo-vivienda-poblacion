@@ -21,7 +21,6 @@
 - [✨ Características Principales](#-características-principales)
 - [🧩 Arquitectura MVC](#-arquitectura-mvc)
 - [🗄️ Base de Datos](#️-base-de-datos)
-- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
 - [🚀 Guía de Instalación](#-guía-de-instalación)
 - [📊 Ejemplo de Uso](#-ejemplo-de-uso)
 - [👥 Equipo de Desarrollo](#-equipo-de-desarrollo)
