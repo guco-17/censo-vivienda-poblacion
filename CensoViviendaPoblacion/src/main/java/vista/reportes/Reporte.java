@@ -1,5 +1,10 @@
-package vista;
+package vista.reportes;
 
+import vista.graficas.GraficoDistribucionEdad;
+import vista.graficas.GraficoTop5MunicipiosPoblados;
+import vista.graficas.GraficoNivelEducativo;
+import vista.graficas.GraficoServiciosBasicos;
+import vista.graficas.GraficoHabitantesTipoVivienda;
 import controlador.DashboardControlador;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
@@ -9,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Municipio;
 import modelo.Usuario;
+import vista.Inicio;
 
 public class Reporte extends javax.swing.JFrame {
      private final Usuario usuarioSesion;

@@ -1,4 +1,4 @@
-package vista;
+package vista.graficas;
 
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -6,6 +6,8 @@ import modelo.Usuario;
 import modelo.Vivienda;
 import controlador.ViviendaControlador;
 import javax.swing.JOptionPane;
+import vista.Inicio;
+import static utils.CierreSeguro.cerrarAplicacion;
 
 public class tablaViviendas extends javax.swing.JFrame {
     private final Usuario usuarioSesion;
@@ -28,8 +30,10 @@ public class tablaViviendas extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
-        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -55,6 +59,18 @@ public class tablaViviendas extends javax.swing.JFrame {
         menuInicio.add(menuItemInicio);
 
         jMenuBar1.add(menuInicio);
+
+        menuSalir.setText("Cerrar Aplicación");
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuSalir.add(jMenuItem3);
+
+        jMenuBar1.add(menuSalir);
 
         setJMenuBar(jMenuBar1);
 
@@ -115,12 +131,18 @@ public class tablaViviendas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuItemInicioActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        cerrarAplicacion(usuarioSesion);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JMenu menuInicio;
     private javax.swing.JMenuItem menuItemInicio;
+    private javax.swing.JMenu menuSalir;
     // End of variables declaration//GEN-END:variables
 }

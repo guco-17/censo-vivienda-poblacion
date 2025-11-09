@@ -1,4 +1,4 @@
-package vista;
+package vista.graficas;
 
 import controlador.DashboardControlador;
 import java.awt.*;

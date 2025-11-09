@@ -1,10 +1,22 @@
 package vista;
 
+import vista.CRUDS.MunicipioCRUD;
+import vista.CRUDS.LocalidadesCRUD;
+import vista.CRUDS.TipoViviendaCRUD;
+import vista.CRUDS.gestionVivienda;
+import vista.CRUDS.gestionUsuarios;
+import vista.CRUDS.gestionHabitantes;
+import vista.reportes.Reporte;
+import vista.graficas.tablaViviendas;
+import vista.graficas.GraficoActividadEconomica;
+import vista.graficas.GraficoGenero;
+import vista.graficas.tablaHabitantes;
+import vista.CRUDS.ActividadesEconomicasCRUD;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
-import modelo.ConexionDB;
 import controlador.DashboardControlador;
 import java.awt.BorderLayout;
+import static utils.CierreSeguro.cerrarAplicacion;
 
 public class Inicio extends javax.swing.JFrame {
     private Usuario usuarioActual;
@@ -19,34 +31,6 @@ public class Inicio extends javax.swing.JFrame {
         cargarKPIs();
         cargarGraficoHombresMujeres();
         cargarGraficoDashboard();
-    }
-    
-    public static void cerrarAplicacion(Usuario usuario) {
-        try {
-            if (usuario != null) {
-                System.out.println("Cerrando sesión del usuario: " + usuario.getNombreUsuario());
-                usuario = null;
-            }
-
-            if (ConexionDB.getInstance() != null) {
-                ConexionDB.getInstance().closeConnection();
-                System.out.println("Conexión a base de datos cerrada correctamente.");
-            }
-            
-
-            JOptionPane.showMessageDialog(null,
-                "Sesión cerrada y recursos liberados correctamente.\nSaliendo del sistema...",
-                "Cierre seguro",
-                JOptionPane.INFORMATION_MESSAGE);
-
-            System.exit(0);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                "Error al cerrar la aplicación: " + e.getMessage(),
-                "Error de cierre",
-                JOptionPane.ERROR_MESSAGE);
-        }
     }
     
     private void gestionarPermisos() {
@@ -111,6 +95,7 @@ public class Inicio extends javax.swing.JFrame {
         graficoActEconom.revalidate();
         graficoActEconom.repaint();
     }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -148,10 +133,12 @@ public class Inicio extends javax.swing.JFrame {
         menuPoblacion = new javax.swing.JMenu();
         menuItemGestionHabitantes = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jMenuItem2.setText("jMenuItem2");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        utils.CierreSeguro.habilitarCierreSeguro(this, this.usuarioActual);
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 255));
 
@@ -445,6 +432,18 @@ public class Inicio extends javax.swing.JFrame {
 
         menuBar.add(menuPoblacion);
 
+        menuSalir.setText("Cerrar Aplicación");
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuSalir.add(jMenuItem3);
+
+        menuBar.add(menuSalir);
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -525,6 +524,10 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnHabitantesViviendaActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+       cerrarAplicacion(this.usuarioActual);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHabitantesVivienda;
     private javax.swing.JPanel graficoActEconom;
@@ -533,6 +536,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -552,6 +556,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemTipoViviendaCRUD;
     private javax.swing.JMenuItem menuMunicipios;
     private javax.swing.JMenu menuPoblacion;
+    private javax.swing.JMenu menuSalir;
     private javax.swing.JMenu menuUsuarios;
     private javax.swing.JMenu menuVivienda;
     private javax.swing.JPanel panelGraficoGenero;

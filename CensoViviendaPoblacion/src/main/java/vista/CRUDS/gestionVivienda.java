@@ -1,4 +1,4 @@
-package vista;
+package vista.CRUDS;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -9,6 +9,8 @@ import modelo.TipoVivienda;
 import modelo.Usuario;
 import controlador.ViviendaControlador;
 import modelo.Vivienda;
+import vista.Inicio;
+import static utils.CierreSeguro.cerrarAplicacion;
 
 public class gestionVivienda extends javax.swing.JFrame {
     //AUXILIARES DE MAPEO
@@ -109,8 +111,10 @@ public class gestionVivienda extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
-        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblViviendasTitulo.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         lblViviendasTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -214,6 +218,18 @@ public class gestionVivienda extends javax.swing.JFrame {
         menuInicio.add(menuItemInicio);
 
         jMenuBar1.add(menuInicio);
+
+        menuSalir.setText("Cerrar Aplicación");
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuSalir.add(jMenuItem3);
+
+        jMenuBar1.add(menuSalir);
 
         setJMenuBar(jMenuBar1);
 
@@ -538,6 +554,10 @@ public class gestionVivienda extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        cerrarAplicacion(usuarioSesion);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnEliminar;
@@ -548,6 +568,7 @@ public class gestionVivienda extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cboLuz;
     private javax.swing.JComboBox<String> cboTipoVivienda;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -566,6 +587,7 @@ public class gestionVivienda extends javax.swing.JFrame {
     private javax.swing.JLabel lblViviendasTitulo;
     private javax.swing.JMenu menuInicio;
     private javax.swing.JMenuItem menuItemInicio;
+    private javax.swing.JMenu menuSalir;
     private javax.swing.JTextPane txtCalle;
     private javax.swing.JTextPane txtCodigoVivienda;
     private javax.swing.JTextPane txtColonia;

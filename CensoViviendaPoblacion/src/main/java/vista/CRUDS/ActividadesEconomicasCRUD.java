@@ -1,4 +1,4 @@
-package vista;
+package vista.CRUDS;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Usuario;
 import modelo.ActividadEconomica;
 import modelo.DAO.ActividadEconomicaDAO;
+import vista.Inicio;
+import static utils.CierreSeguro.cerrarAplicacion;
 
 public class ActividadesEconomicasCRUD extends javax.swing.JFrame {
     private final Usuario usuarioSesion;
@@ -38,8 +40,10 @@ public class ActividadesEconomicasCRUD extends javax.swing.JFrame {
         jMenuBar3 = new javax.swing.JMenuBar();
         menuInicio2 = new javax.swing.JMenu();
         menuItemInicio2 = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
-        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         LBLtITULO.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         LBLtITULO.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -100,6 +104,18 @@ public class ActividadesEconomicasCRUD extends javax.swing.JFrame {
         menuInicio2.add(menuItemInicio2);
 
         jMenuBar3.add(menuInicio2);
+
+        menuSalir.setText("Cerrar Aplicación");
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuSalir.add(jMenuItem3);
+
+        jMenuBar3.add(menuSalir);
 
         setJMenuBar(jMenuBar3);
 
@@ -305,6 +321,10 @@ public class ActividadesEconomicasCRUD extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        cerrarAplicacion(usuarioSesion);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LBLtITULO;
@@ -314,12 +334,14 @@ public class ActividadesEconomicasCRUD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar3;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JMenu menuInicio2;
     private javax.swing.JMenuItem menuItemInicio2;
+    private javax.swing.JMenu menuSalir;
     private javax.swing.JTextPane txtActEconom;
     private javax.swing.JTextPane txtDescripcion;
     // End of variables declaration//GEN-END:variables

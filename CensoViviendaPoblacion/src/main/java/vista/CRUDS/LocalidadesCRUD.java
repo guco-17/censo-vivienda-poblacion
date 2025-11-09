@@ -1,4 +1,4 @@
-package vista;
+package vista.CRUDS;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -8,6 +8,8 @@ import modelo.DAO.MunicipioDAO;
 import modelo.Localidad;
 import modelo.Municipio;
 import modelo.Usuario;
+import vista.Inicio;
+import static utils.CierreSeguro.cerrarAplicacion;
 
 public class LocalidadesCRUD extends javax.swing.JFrame {
     private final Usuario usuarioSesion;
@@ -53,8 +55,10 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
         jMenuBar3 = new javax.swing.JMenuBar();
         menuInicio2 = new javax.swing.JMenu();
         menuItemInicio2 = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
-        utils.CierreSeguro.habilitarCierreSeguro(this, usuarioSesion);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         LBLtITULO.setFont(new java.awt.Font("Gadugi", 1, 24)); // NOI18N
         LBLtITULO.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -143,6 +147,18 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
 
         jMenuBar3.add(menuInicio2);
 
+        menuSalir.setText("Cerrar Aplicación");
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuSalir.add(jMenuItem3);
+
+        jMenuBar3.add(menuSalir);
+
         setJMenuBar(jMenuBar3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,9 +222,7 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(82, 82, 82)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(lblLocalidad))
+                            .addComponent(lblLocalidad)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -419,6 +433,10 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        cerrarAplicacion(usuarioSesion);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LBLtITULO;
@@ -427,6 +445,7 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar3;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -440,6 +459,7 @@ public class LocalidadesCRUD extends javax.swing.JFrame {
     private javax.swing.JLabel lblLocalidades;
     private javax.swing.JMenu menuInicio2;
     private javax.swing.JMenuItem menuItemInicio2;
+    private javax.swing.JMenu menuSalir;
     private javax.swing.JTable tablaLocalidades;
     private javax.swing.JTable tablaMunicipios;
     private javax.swing.JTextPane txtCveLoc;

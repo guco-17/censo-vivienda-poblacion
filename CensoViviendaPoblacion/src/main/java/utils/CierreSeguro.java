@@ -2,6 +2,7 @@ package utils;
 
 import javax.swing.*;
 import java.awt.event.*;
+import modelo.ConexionDB;
 import modelo.Usuario;
 import vista.Inicio;
 
@@ -19,9 +20,37 @@ public class CierreSeguro {
                 );
 
                 if (opcion == JOptionPane.YES_OPTION) {
-                    Inicio.cerrarAplicacion(usuarioSesion);
+                    cerrarAplicacion(usuarioSesion);
                 }
             }
         });
+    }
+    
+    public static void cerrarAplicacion(Usuario usuario) {
+        try {
+            if (usuario != null) {
+                System.out.println("Cerrando sesión del usuario: " + usuario.getNombreUsuario());
+                usuario = null;
+            }
+
+            if (ConexionDB.getInstance() != null) {
+                ConexionDB.getInstance().closeConnection();
+                System.out.println("Conexión a base de datos cerrada correctamente.");
+            }
+            
+
+            JOptionPane.showMessageDialog(null,
+                "Sesión cerrada y recursos liberados correctamente.\nSaliendo del sistema...",
+                "Cierre seguro",
+                JOptionPane.INFORMATION_MESSAGE);
+
+            System.exit(0);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                "Error al cerrar la aplicación: " + e.getMessage(),
+                "Error de cierre",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
