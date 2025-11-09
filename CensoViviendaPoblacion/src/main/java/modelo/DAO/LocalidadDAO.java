@@ -59,7 +59,7 @@ public class LocalidadDAO {
     
     public ArrayList<Localidad> obtenerTodos() throws Exception {
         ArrayList<Localidad> localidades = new ArrayList<>();
-        String sql = "SELECT idLocalidad, descripcion, cve_loc, idMunicipio FROM Localidad ORDER BY descripcion";
+        String sql = "SELECT idLocalidad, descripcion, cve_loc, idMunicipio FROM Localidad ORDER BY idMunicipio";
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
