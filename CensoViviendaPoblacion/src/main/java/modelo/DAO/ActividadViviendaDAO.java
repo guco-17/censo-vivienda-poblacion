@@ -5,10 +5,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import modelo.ActividadEconomica;
 
-public class ActividadHabitanteDAO {
+public class ActividadViviendaDAO {
     private Connection conn;
 
-    public ActividadHabitanteDAO() {
+    public ActividadViviendaDAO() {
         conn = ConexionDB.getInstance().getConnection();
     }
     
@@ -19,36 +19,34 @@ public class ActividadHabitanteDAO {
         return a;
     }
     
-    public boolean agregarRelacion(int idHabitante, int idActividadEconomica) throws SQLException {
-        String sql = "INSERT INTO Habitante_Actividad (idHabitante, idActividadEconomica) VALUES (?, ?)";
+    public boolean agregarRelacion(int idVivienda, int idActividadEconomica) throws SQLException {
+        String sql = "INSERT INTO Vivienda_Actividad (idVivienda, idActividadEconomica) VALUES (?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idHabitante);
+            ps.setInt(1, idVivienda);
             ps.setInt(2, idActividadEconomica);
 
             return ps.executeUpdate() > 0;
         }
     }
     
-    public boolean eliminarRelaciones(int idHabitante) throws SQLException {
-        String sql = "DELETE FROM Habitante_Actividad WHERE idHabitante = ?";
+    public boolean eliminarRelaciones(int idVivienda) throws SQLException {
+        String sql = "DELETE FROM Vivienda_Actividad WHERE idVivienda = ?";
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idHabitante);
+            ps.setInt(1, idVivienda);
             return ps.executeUpdate() >= 0;
         }
     }
     
-    public ArrayList<ActividadEconomica> obtenerActividadesPorHabitante(int idHabitante) throws SQLException, Exception {
+    public ArrayList<ActividadEconomica> obtenerActividadesPorVivienda(int idVivienda) throws SQLException, Exception {
         ArrayList<ActividadEconomica> actividades = new ArrayList<>();
-        String sql = "SELECT t2.* FROM Habitante_Actividad t1 " +
+        String sql = "SELECT t2.* FROM Vivienda_Actividad t1 " +
                      "JOIN ActividadEconomica t2 ON t1.idActividadEconomica = t2.idActividadEconomica " +
-                     "WHERE t1.idHabitante = ?";
-        
-        ActividadEconomicaDAO actividadDAO = new ActividadEconomicaDAO();
-        
+                     "WHERE t1.idVivienda = ?";
+                
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idHabitante);
+            ps.setInt(1, idVivienda);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ActividadEconomica a = mapearActividadEconomica(rs);
@@ -57,7 +55,7 @@ public class ActividadHabitanteDAO {
             }
         }
         catch (SQLException e) {
-            throw new Exception("Error al obtener actividades del habitante (ID: " + idHabitante + "): " + e.getMessage(), e);
+            throw new Exception("Error al obtener actividades del habitante (ID: " + idVivienda + "): " + e.getMessage(), e);
         }
         return actividades;
     }

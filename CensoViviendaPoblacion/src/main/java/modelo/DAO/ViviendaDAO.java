@@ -4,12 +4,24 @@ import modelo.ConexionDB;
 import modelo.Vivienda;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ViviendaDAO {
     private Connection conn = ConexionDB.getInstance().getConnection();
-
+    private final ActividadViviendaDAO actividadViviendaDAO;
+    
     public ViviendaDAO() {
         this.conn = ConexionDB.getInstance().getConnection();
+        this.actividadViviendaDAO = new ActividadViviendaDAO();
+    }
+    
+    private void cargarActividadesEconomicas(Vivienda v) throws SQLException {
+        try {
+            v.setActividadesEconomicas(actividadViviendaDAO.obtenerActividadesPorVivienda(v.getIdVivienda()));
+        } catch (Exception ex) {
+            Logger.getLogger(ViviendaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private Vivienda mapearVivienda(ResultSet rs) throws SQLException {
@@ -34,6 +46,7 @@ public class ViviendaDAO {
         // Se incluyen todos los campos excepto idVivienda (autoincremental) y idMunicipio (redundante, se deriva de Localidad)
         String sql = "INSERT INTO Vivienda (codigoVivienda, calle, numeroExterior, colonia, cuartos, tieneAgua, tieneLuz, tieneGas, idLocalidad, idMunicipio, idTipoVivienda) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int idGenerado = -1;
         
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, vivienda.getCodigoVivienda());

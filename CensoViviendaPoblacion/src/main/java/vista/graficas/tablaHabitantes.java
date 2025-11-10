@@ -7,7 +7,6 @@ import modelo.Habitante;
 import modelo.Usuario;
 import controlador.HabitanteControlador;
 import javax.swing.table.DefaultTableModel;
-import modelo.ActividadEconomica;
 import vista.Inicio;
 import static utils.CierreSeguro.cerrarAplicacion;
 
@@ -89,20 +88,6 @@ public class tablaHabitantes extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private String convertirActividadesAString(ArrayList<ActividadEconomica> actividades) {
-        if (actividades == null || actividades.isEmpty()) {
-            return "N/A";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < actividades.size(); i++) {
-            sb.append(actividades.get(i).getDescripcion());
-            if (i < actividades.size() - 1) {
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
-    }
     
     private void cargarTablaHabitantes() {
         DefaultTableModel modelo = new DefaultTableModel();
@@ -118,7 +103,6 @@ public class tablaHabitantes extends javax.swing.JFrame {
         modelo.addColumn("Vivienda (Calle y Código)");
         modelo.addColumn("Localidad");
         modelo.addColumn("Municipio");
-        modelo.addColumn("Actividades Económicas");
 
         try {
             ArrayList<Habitante> habitantes = controlador.obtenerTodosLosHabitantesConRelaciones();
@@ -130,7 +114,6 @@ public class tablaHabitantes extends javax.swing.JFrame {
 
                 String fechaNacimiento = (h.getFechaNacimiento() != null) ? sdf.format(h.getFechaNacimiento()) : "";
 
-                String actividadesStr = convertirActividadesAString(h.getActividadesEconomicas());
                 modelo.addRow(new Object[]{
                     h.getCodigoHabitante(),
                     nombreCompleto,
@@ -141,7 +124,6 @@ public class tablaHabitantes extends javax.swing.JFrame {
                     h.getCalleVivienda(),
                     h.getNombreLocalidad(),
                     h.getNombreMunicipio() ,
-                    actividadesStr
                 });
             }
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package controlador;
 
 import modelo.DAO.HabitanteDAO;
-import modelo.DAO.ActividadHabitanteDAO;
+import modelo.DAO.ActividadViviendaDAO;
 import modelo.Habitante; 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,11 +12,11 @@ import modelo.ActividadEconomica;
 
 public class HabitanteControlador {
     private HabitanteDAO habitanteDAO;
-    private ActividadHabitanteDAO haDAO;
+    private ActividadViviendaDAO haDAO;
     
     public HabitanteControlador() {
         this.habitanteDAO = new HabitanteDAO();
-        this.haDAO = new ActividadHabitanteDAO();
+        this.haDAO = new ActividadViviendaDAO();
     }
     
     private long calcularEdad(Date fechaNacimiento){
@@ -25,18 +25,6 @@ public class HabitanteControlador {
         }
         LocalDate fechaNac = fechaNacimiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return ChronoUnit.YEARS.between(fechaNac, LocalDate.now());
-    }
-    
-    private boolean guardarActividades(int idHabitante, ArrayList<ActividadEconomica> actividades) throws Exception {
-        haDAO.eliminarRelaciones(idHabitante); 
-        
-        for (ActividadEconomica actividad : actividades) {
-            if (!haDAO.agregarRelacion(idHabitante, actividad.getId())) {
-                System.err.println("Fallo al guardar relación con Actividad ID: " + actividad.getId());
-                return false;
-            }
-        }
-        return true;
     }
     
     public boolean registrarHabitante(Habitante habitante) throws Exception{
@@ -53,10 +41,6 @@ public class HabitanteControlador {
             throw new Exception("La fecha de nacimiento no es válida o la edad está fuera del rango lógico.");
         }
         
-        if (habitanteDAO.agregar(habitante)) { 
-            return guardarActividades(habitante.getIdHabitante(), habitante.getActividadesEconomicas());
-        }
-        
         return false;
     }
     
@@ -67,10 +51,6 @@ public class HabitanteControlador {
         
         if (habitante.getNombre().trim().isEmpty() || habitante.getPaterno().trim().isEmpty()) {
             throw new Exception("El Nombre y Apellido Paterno no pueden quedar vacíos.");
-        }
-        
-        if (habitanteDAO.actualizar(habitante)) {
-            return guardarActividades(habitante.getIdHabitante(), habitante.getActividadesEconomicas());
         }
         
         return false;

@@ -32,16 +32,18 @@ public class DashboardDAO {
     //KPI POBLACIÓN ACTIVA ECONÓMICAMENTE
     public int contarPoblacionEconomicamenteActiva() {
         int total = 0;
-        String sql = "SELECT COUNT(idHabitante) AS total FROM Habitante_Actividad";
-        
+        String sql = "SELECT COUNT(DISTINCT H.idHabitante) AS total " +
+                 "FROM Habitante H " +
+                 "JOIN Vivienda_Actividad VA ON H.idVivienda = VA.idVivienda";
+
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             if (rs.next()) {
                 total = rs.getInt("total");
             }
         } catch (SQLException e) {
-            System.err.println("Error SQL al contar la PEA: " + e.getMessage());
+            System.err.println("Error SQL al contar población activa económicamente: " + e.getMessage());
         }
         return total;
     }
@@ -119,15 +121,17 @@ public class DashboardDAO {
     public Map<String, Integer> obtenerTop5ActividadesEconomicas() {
         Map<String, Integer> resultados = new LinkedHashMap<>();
         
-        String sql = "SELECT TOP 5 ae.descripcion AS nombreActividad, COUNT(ha.idHabitante) AS conteo FROM Habitante_Actividad ha JOIN ActividadEconomica ae ON ha.idActividadEconomica = ae.idActividadEconomica GROUP BY ae.descripcion ORDER BY conteo DESC;";
-
+        String sql = "SELECT TOP 5 AE.descripcion, COUNT(VA.idVivienda) AS conteo " +
+                 "FROM ActividadEconomica AE " +
+                 "JOIN Vivienda_Actividad VA ON AE.idActividadEconomica = VA.idActividadEconomica " +
+                 "GROUP BY AE.descripcion " +
+                 "ORDER BY conteo DESC";
+        
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                String nombreActividad = rs.getString("nombreActividad");
-                int conteo = rs.getInt("conteo");
-                resultados.put(nombreActividad, conteo);
+                resultados.put(rs.getString("descripcion"), rs.getInt("conteo"));
             }
         } catch (SQLException e) {
             System.err.println("Error SQL al obtener el Top 5 de actividades económicas: " + e.getMessage());
@@ -139,52 +143,61 @@ public class DashboardDAO {
     public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio) {
         List<Map<String, Object>> resultados = new ArrayList<>();
 
-        String sql = "SELECT \n" +
-                    "    V.codigoVivienda, \n" +
-                    "    M.descripcion AS nombreMunicipio, \n" +
-                    "    V.colonia, V.calle, V.numeroExterior, \n" +
-                    "    COUNT(H.idHabitante) AS totalHabitantes, \n" +
-                    "    STUFF((SELECT '; ' + H2.nombre + ' ' + H2.paterno + ' ' + COALESCE(H2.materno, '') \n" +
-                    "           FROM Habitante H2 WHERE H2.idVivienda = V.idVivienda \n" +
-                    "           FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS nombresDetallados, \n" +
-                    "    COALESCE(\n" +
-                    "        (SELECT STUFF((SELECT DISTINCT '; ' + AE.descripcion \n" +
-                    "                       FROM Habitante H3 \n" +
-                    "                       INNER JOIN Habitante_Actividad HA ON H3.idHabitante = HA.idHabitante \n" +
-                    "                       INNER JOIN ActividadEconomica AE ON HA.idActividadEconomica = AE.idActividadEconomica \n" +
-                    "                       WHERE H3.idVivienda = V.idVivienda \n" +
-                    "                       FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '')),\n" +
-                    "        'Sin actividad registrada'\n" +
-                    "    ) AS actividadesEconomicas \n" +
-                    "FROM Vivienda V \n" +
-                    "JOIN Habitante H ON V.idVivienda = H.idVivienda \n" +
-                    "JOIN Municipio M ON V.idMunicipio = M.idMunicipio \n" +
-                    "WHERE (? = 'Todos' OR M.descripcion = ?) \n" +
-                    "GROUP BY V.idVivienda, V.codigoVivienda, V.calle, V.numeroExterior, V.colonia, M.descripcion \n" +
-                    "ORDER BY V.codigoVivienda";
+        // SQL que combina datos de vivienda, cuenta habitantes, lista nombres y lista actividades
+        String sql = "SELECT " +
+                     "V.codigoVivienda, " +
+                     "M.descripcion AS nombreMunicipio, " +
+                     "V.colonia, " +
+                     "V.calle, " +
+                     "COUNT(H.idHabitante) AS TotalHabitantes, " +
+                     "STRING_AGG(H.nombre + ' ' + H.paterno + ISNULL(' ' + H.materno, ''), ', ') AS NombresDetallados, " +
+                     "STUFF(( " +
+                         "SELECT ', ' + AE.descripcion " +
+                         "FROM Vivienda_Actividad VA_inner " +
+                         "JOIN ActividadEconomica AE ON VA_inner.idActividadEconomica = AE.idActividadEconomica " +
+                         "WHERE VA_inner.idVivienda = V.idVivienda " +
+                         "FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS ActividadesEconomicas " +
+                     "FROM Vivienda V " +
+                     "JOIN Habitante H ON V.idVivienda = H.idVivienda " +
+                     "JOIN Localidad L ON V.idLocalidad = L.idLocalidad " +
+                     "JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?) " +
+                     "GROUP BY V.idVivienda, V.codigoVivienda, M.descripcion, V.colonia, V.calle " +
+                     "ORDER BY V.codigoVivienda";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
+            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty() && !nombreMunicipio.equals("Todos")) ? nombreMunicipio : null;
+
+            // Establecer los parámetros para el filtro
+            if (filtro == null) {
+                ps.setNull(1, Types.VARCHAR);
+                ps.setString(2, "Todos"); // Se usa en la comparación
+                ps.setNull(3, Types.VARCHAR);
+            } else {
+                ps.setString(1, filtro);
+                ps.setString(2, "NoTodos"); // Para que la condición no se cumpla en la segunda parte
+                ps.setString(3, filtro);
+            }
 
             try (ResultSet rs = ps.executeQuery()) {
-                ResultSetMetaData meta = rs.getMetaData();
-                int columnas = meta.getColumnCount();
-
                 while (rs.next()) {
                     Map<String, Object> fila = new LinkedHashMap<>();
-                    for (int i = 1; i <= columnas; i++) {
-                        fila.put(meta.getColumnLabel(i), rs.getObject(i));
-                    }
+                    fila.put("Código Vivienda", rs.getInt("codigoVivienda"));
+                    fila.put("Municipio", rs.getString("nombreMunicipio"));
+                    fila.put("Colonia", rs.getString("colonia"));
+                    fila.put("Calle", rs.getString("calle"));
+                    fila.put("Habitantes", rs.getInt("TotalHabitantes"));
+                    fila.put("Nombres Detallados", rs.getString("NombresDetallados"));
+                    // Nuevo campo Act. Económicas
+                    fila.put("Act. Económicas", rs.getString("ActividadesEconomicas")); 
                     resultados.add(fila);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error SQL al obtener el reporte de Habitantes por Vivienda: " + e.getMessage());
+            System.err.println("Error SQL al obtener habitantes por vivienda: " + e.getMessage());
         }
         return resultados;
-   }
+    }
     
     //PROMEDIO DE HABITANTES POR VIVIENDA
     public double promedioHabitantesPorVivienda(String nombreMunicipio){

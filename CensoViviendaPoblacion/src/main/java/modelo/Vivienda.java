@@ -18,6 +18,7 @@ public class Vivienda {
     private int idTipoVivienda;
     //ATRIBUTOS DE LA LÓGICA DEL NEGOCIO.
     private ArrayList<Habitante> habitantes;
+    private ArrayList<ActividadEconomica> actividadesEconomicas;
     private int totalHabitantes;
     private String nombreLocalidad;
     private String nombreMunicipio;
@@ -178,5 +179,13 @@ public class Vivienda {
 
     public void setDescripcionTipoVivienda(String descripcionTipoVivienda) {
         this.descripcionTipoVivienda = descripcionTipoVivienda;
+    }
+
+    public ArrayList<ActividadEconomica> getActividadesEconomicas() {
+        return actividadesEconomicas;
+    }
+
+    public void setActividadesEconomicas(ArrayList<ActividadEconomica> actividadesEconomicas) {
+        this.actividadesEconomicas = actividadesEconomicas;
     }
 }
