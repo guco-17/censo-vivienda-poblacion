@@ -19,6 +19,7 @@ public class Habitante {
     private Vivienda vivienda;
     //ATRIBUTOS DE LA LOGICA DE NEGOCIO
     private int edad;
+    private ArrayList<ActividadEconomica> actividadesEconomicas;
     private String calleVivienda;
     private int codigoVivienda;
     private String nombreLocalidad;
@@ -138,6 +139,14 @@ public class Habitante {
 
     public void setVivienda(Vivienda vivienda) {
         this.vivienda = vivienda;
+    }
+
+    public ArrayList<ActividadEconomica> getActividadesEconomicas() {
+        return actividadesEconomicas;
+    }
+
+    public void setActividadesEconomicas(ArrayList<ActividadEconomica> actividadesEconomicas) {
+        this.actividadesEconomicas = actividadesEconomicas;
     }
 
     public String getCalleVivienda() {

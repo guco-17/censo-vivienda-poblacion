@@ -34,6 +34,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
         this.usuarioSesion = usuarioAutenticado;
         this.controlador = new HabitanteControlador();
         cargarViviendas();
+        cargarActividades();
     }
     
     @SuppressWarnings("unchecked")
@@ -66,6 +67,8 @@ public class gestionHabitantes extends javax.swing.JFrame {
         txtCodigoHabitante = new javax.swing.JTextPane();
         cboVivienda = new javax.swing.JComboBox<>();
         lblNivelEducacion1 = new javax.swing.JLabel();
+        lblNivelEducacion2 = new javax.swing.JLabel();
+        cboActividad = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
         menuItemInicio = new javax.swing.JMenuItem();
@@ -156,6 +159,16 @@ public class gestionHabitantes extends javax.swing.JFrame {
         lblNivelEducacion1.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
         lblNivelEducacion1.setText("Seleccionar Vivienda:");
 
+        lblNivelEducacion2.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblNivelEducacion2.setText("Seleccionar Actividad:");
+
+        cboActividad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboActividad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboActividadActionPerformed(evt);
+            }
+        });
+
         menuInicio.setText("Inicio");
 
         menuItemInicio.setText("Regresar");
@@ -231,7 +244,10 @@ public class gestionHabitantes extends javax.swing.JFrame {
                                 .addComponent(lblFechaNaciiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(178, 178, 178)
-                                .addComponent(lblMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                                .addComponent(lblMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblNivelEducacion2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3)
@@ -239,7 +255,8 @@ public class gestionHabitantes extends javax.swing.JFrame {
                             .addComponent(cboGenero, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cboEstadoCivil, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cboNivelEducacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cboVivienda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cboVivienda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboActividad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(115, 115, 115))
             .addComponent(lblHabitantesTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -284,12 +301,16 @@ public class gestionHabitantes extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cboVivienda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNivelEducacion1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboActividad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNivelEducacion2))
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
@@ -306,6 +327,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
         cboEstadoCivil.setSelectedIndex(0);
         cboNivelEducacion.setSelectedIndex(0);
         cboVivienda.setSelectedIndex(0);
+        cboActividad.setSelectedIndex(0);
 
         this.actividadesDelHabitante.clear();
 
@@ -331,6 +353,22 @@ public class gestionHabitantes extends javax.swing.JFrame {
         }
     }
     
+    private void cargarActividades() {
+        try {
+            cboActividad.removeAllItems();
+            cboActividad.addItem("Seleccionar Actividad (Añadir)");
+
+            // Obtener todas las actividades económicas
+            listaActividades = actividadDAO.obtenerTodos();
+
+            for (ActividadEconomica ae : listaActividades) {
+                cboActividad.addItem(ae.getDescripcion());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar actividades: " + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private Habitante recolectarDatos(){
         int codigoHabitante = Integer.parseInt(txtCodigoHabitante.getText());
@@ -353,6 +391,11 @@ public class gestionHabitantes extends javax.swing.JFrame {
             return null;
         }
         
+        // CORRECCIÓN CLAVE: Validación de actividades
+        if (this.actividadesDelHabitante.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar al menos una actividad económica.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
         
         // ComboBoxes (asumiendo que cboGenero, cboEstadoCivil, cboNivelEducacion existen)
         String genero = cboGenero.getSelectedItem().toString();
@@ -370,6 +413,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
         nuevoHabitante.setEstadoCivil(estadoCivil);
         nuevoHabitante.setNivelEducacion(nivelEducacion);
         nuevoHabitante.setIdVivienda(this.idViviendaSeleccionada);
+        nuevoHabitante.setActividadesEconomicas(this.actividadesDelHabitante);
         
         return nuevoHabitante; 
     }
@@ -404,6 +448,33 @@ public class gestionHabitantes extends javax.swing.JFrame {
             this.idViviendaSeleccionada = -1;
         }
     }//GEN-LAST:event_cboViviendaActionPerformed
+
+    private void cboActividadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboActividadActionPerformed
+        int indice = cboActividad.getSelectedIndex();
+        
+        // Si hay una actividad seleccionada (índice > 0, ya que 0 es "Seleccionar...")
+        if (indice > 0 && listaActividades != null && indice <= listaActividades.size()) {
+            ActividadEconomica actividadSeleccionada = listaActividades.get(indice - 1); // -1 para obtener el objeto correcto de la lista de mapeo
+            
+            // 1. Verificar si ya se añadió para evitar duplicados
+            if (!actividadesDelHabitante.contains(actividadSeleccionada)) {
+                this.actividadesDelHabitante.add(actividadSeleccionada);
+                
+                JOptionPane.showMessageDialog(this, 
+                        "Actividad '" + actividadSeleccionada.getDescripcion() + "' añadida.\nTotal de actividades seleccionadas: " + actividadesDelHabitante.size(), 
+                        "Actividad Añadida", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                        "Esta actividad ya fue seleccionada.", 
+                        "Advertencia", 
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            
+            // Opcional: limpiar la selección del combo después de añadir
+            cboActividad.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_cboActividadActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Habitante habitanteActualizado = recolectarDatos(); 
@@ -460,6 +531,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegistrar;
+    private javax.swing.JComboBox<String> cboActividad;
     private javax.swing.JComboBox<String> cboEstadoCivil;
     private javax.swing.JComboBox<String> cboGenero;
     private javax.swing.JComboBox<String> cboNivelEducacion;
@@ -480,6 +552,7 @@ public class gestionHabitantes extends javax.swing.JFrame {
     private javax.swing.JLabel lblMaterno;
     private javax.swing.JLabel lblNivelEducacion;
     private javax.swing.JLabel lblNivelEducacion1;
+    private javax.swing.JLabel lblNivelEducacion2;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPaterno;
     private javax.swing.JMenu menuInicio;

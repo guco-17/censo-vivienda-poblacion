@@ -5,6 +5,7 @@ import modelo.Habitante;
 import java.sql.*;
 import java.util.ArrayList;
 import modelo.ActividadEconomica;
+import modelo.DAO.ActividadHabitanteDAO;
 
 public class HabitanteDAO{
     private Connection conn = ConexionDB.getInstance().getConnection();
@@ -174,6 +175,7 @@ public class HabitanteDAO{
                      "JOIN Vivienda v ON h.idVivienda = v.idVivienda " +
                      "JOIN Localidad l ON v.idLocalidad = l.idLocalidad " +
                      "JOIN Municipio m ON v.idMunicipio = m.idMunicipio";
+        ActividadHabitanteDAO habActDAO = new ActividadHabitanteDAO();
                 
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -185,7 +187,10 @@ public class HabitanteDAO{
                 h.setCodigoVivienda(rs.getInt("codigoVivienda"));
                 h.setNombreLocalidad(rs.getString("nombreLocalidad"));
                 h.setNombreMunicipio(rs.getString("nombreMunicipio"));
+                ArrayList<ActividadEconomica> actividades = habActDAO.obtenerActividadesPorHabitante(h.getIdHabitante());
+                h.setActividadesEconomicas(actividades);
                 
+            
                 lista.add(h);
             }
         } catch (SQLException e) {
