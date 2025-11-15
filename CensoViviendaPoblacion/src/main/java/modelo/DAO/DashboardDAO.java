@@ -3,7 +3,6 @@ package modelo.DAO;
 import java.sql.*;
 import java.util.*;
 import modelo.ConexionDB;
-import java.sql.Types;
 
 public class DashboardDAO {
     private Connection conn = ConexionDB.getInstance().getConnection();
@@ -81,23 +80,31 @@ public class DashboardDAO {
     }
     
     //GRÁFICA DE EDUCACIÓN POR MUNICIPIO.
-    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio(String nombreMunicipio) {
+    public Map<String, Map<String, Integer>> obtenerNivelEducativoPorMunicipio(String nombreMunicipio, String nombreLocalidad) {
         Map<String, Map<String, Integer>> resultados = new HashMap<>();
 
         String sql = "SELECT h.nivelEducacion, m.descripcion AS nombreMunicipio, COUNT(h.idHabitante) AS conteo " +
                      "FROM Habitante h " +
                      "JOIN Vivienda v ON h.idVivienda = v.idVivienda " +
                      "JOIN Municipio m ON v.idMunicipio = m.idMunicipio " +
+                     "JOIN Localidad l ON v.idLocalidad = l.idLocalidad " + 
                      "WHERE h.nivelEducacion IS NOT NULL AND h.nivelEducacion <> '' " +
                      "AND (? IS NULL OR ? = 'Todos' OR m.descripcion = ?) " +
+                     "AND (? IS NULL OR ? = 'Todas' OR l.descripcion = ?) " + 
                      "GROUP BY h.nivelEducacion, m.descripcion " +
                      "ORDER BY m.descripcion, h.nivelEducacion";
-        
+
+        String filtroMunicipio = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
+        String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
+            ps.setString(1, filtroMunicipio);
+            ps.setString(2, filtroMunicipio);
+            ps.setString(3, filtroMunicipio);
+            
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            ps.setString(6, filtroLocalidad);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -110,7 +117,7 @@ public class DashboardDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error SQL al obtener nivel educativo por municipio: " + e.getMessage());
+            System.err.println("Error SQL al obtener nivel educativo por municipio/localidad: " + e.getMessage());
         }
         return resultados;
     }
@@ -136,7 +143,7 @@ public class DashboardDAO {
     }
     
     //TABLA HABITANTES POR VIVIENDA
-    public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio) {
+    public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio, String nombreLocalidad) {
         List<Map<String, Object>> resultados = new ArrayList<>();
 
         String sql = "SELECT \n" +
@@ -159,15 +166,23 @@ public class DashboardDAO {
                     "FROM Vivienda V \n" +
                     "JOIN Habitante H ON V.idVivienda = H.idVivienda \n" +
                     "JOIN Municipio M ON V.idMunicipio = M.idMunicipio \n" +
+                    "JOIN Localidad L ON V.idLocalidad = L.idLocalidad \n" + // <-- JOIN A LOCALIDAD
                     "WHERE (? = 'Todos' OR M.descripcion = ?) \n" +
+                    "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?) \n" +
                     "GROUP BY V.idVivienda, V.codigoVivienda, V.calle, V.numeroExterior, V.colonia, M.descripcion \n" +
                     "ORDER BY V.codigoVivienda";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-
+            String filtroMunicipio = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
+            String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
+            
+            ps.setString(1, filtroMunicipio);
+            ps.setString(2, filtroMunicipio);
+            
+            ps.setString(3, filtroLocalidad);
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            
             try (ResultSet rs = ps.executeQuery()) {
                 ResultSetMetaData meta = rs.getMetaData();
                 int columnas = meta.getColumnCount();
@@ -187,52 +202,70 @@ public class DashboardDAO {
    }
     
     //PROMEDIO DE HABITANTES POR VIVIENDA
-    public double promedioHabitantesPorVivienda(String nombreMunicipio){
-        double promedio = 0;
+    public double promedioHabitantesPorVivienda(String nombreMunicipio, String nombreLocalidad) {
+        double promedio = 0.0;
+
         String sql = "SELECT CAST(COUNT(H.idHabitante) AS DECIMAL(10, 2)) / CAST(COUNT(DISTINCT V.idVivienda) AS DECIMAL(10, 2)) AS promedio " +
                      "FROM Vivienda V " +
                      "INNER JOIN Habitante H ON V.idVivienda = H.idVivienda " +
                      "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
-                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?)";
-        
+                     "INNER JOIN Localidad L ON V.idLocalidad = L.idLocalidad " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?) " +
+                     "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?)";
+
+        String filtroMunicipioSQL = (nombreMunicipio != null && !nombreMunicipio.isEmpty() && !nombreMunicipio.equals("Todos")) ? nombreMunicipio : null;
+        String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, filtroMunicipioSQL);
+            ps.setString(2, filtroMunicipioSQL);
+            ps.setString(3, filtroMunicipioSQL);
             
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            ps.setString(6, filtroLocalidad);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    promedio = rs.getDouble("promedio"); 
+                    promedio = rs.getDouble("promedio");
+                    if (rs.wasNull()) {
+                        promedio = 0.0;
+                    }
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error SQL al obtener el promedio de habitantes por vivienda: " + e.getMessage()); 
+            System.err.println("Error SQL al obtener el promedio de habitantes por vivienda: " + e.getMessage());
         }
         return promedio;
     }
     
     //CANTIDAD DE HABITANTES QUE VIVEN POR CADA TIPO DE VIVIENDA
-    public Map<String, Integer> obtenerHabitantesPorTipoVivienda(String nombreMunicipio){
-       Map<String, Integer> resultados = new LinkedHashMap<>(); 
+    public Map<String, Integer> obtenerHabitantesPorTipoVivienda(String nombreMunicipio, String nombreLocalidad) { // <-- FIRMA MODIFICADA
+        Map<String, Integer> resultados = new LinkedHashMap<>(); 
 
         String sql = "SELECT TV.descripcion AS TipoVivienda, COUNT(H.idHabitante) AS TotalHabitantes " +
                      "FROM TipoVivienda TV " +
                      "INNER JOIN Vivienda V ON TV.idTipoVivienda = V.idTipoVivienda " +
                      "INNER JOIN Habitante H ON V.idVivienda = H.idVivienda " +
                      "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
+                     "INNER JOIN Localidad L ON V.idLocalidad = L.idLocalidad " +
                      "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?) " +
+                     "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?) " +
                      "GROUP BY TV.descripcion " +
                      "ORDER BY TotalHabitantes DESC";
 
+        String filtroMunicipioSQL = (nombreMunicipio != null && !nombreMunicipio.isEmpty() && !nombreMunicipio.equals("Todos")) ? nombreMunicipio : null;
+        String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, filtroMunicipioSQL);
+            ps.setString(2, filtroMunicipioSQL);
+            ps.setString(3, filtroMunicipioSQL);
             
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            ps.setString(6, filtroLocalidad);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String tipoVivienda = rs.getString("TipoVivienda");
@@ -246,25 +279,32 @@ public class DashboardDAO {
         return resultados;
     }
     
-    public Map<String, Integer> serviciosBasicosMunicipio(String nombreMunicipio){
+    public Map<String, Integer> serviciosBasicosMunicipio(String nombreMunicipio, String nombreLocalidad) { // <-- FIRMA MODIFICADA
         Map<String, Integer> resultados = new LinkedHashMap<>();
-        
+
         String sql = "SELECT " +
-                     "   COUNT(V.idVivienda) AS total_viviendas, " +
-                     "   SUM(CASE WHEN V.tieneAgua = 'SI' THEN 1 ELSE 0 END) AS con_agua, " +
-                     "   SUM(CASE WHEN V.tieneLuz = 'SI' THEN 1 ELSE 0 END) AS con_luz, " +
-                     "   SUM(CASE WHEN V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS con_gas " +
+                     "   COUNT(V.idVivienda) AS total_viviendas, " +
+                     "   SUM(CASE WHEN V.tieneAgua = 'SI' THEN 1 ELSE 0 END) AS con_agua, " +
+                     "   SUM(CASE WHEN V.tieneLuz = 'SI' THEN 1 ELSE 0 END) AS con_luz, " +
+                     "   SUM(CASE WHEN V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS con_gas " +
                      "FROM Vivienda V " +
                      "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
-                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?)";
+                     "INNER JOIN Localidad L ON V.idLocalidad = L.idLocalidad " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?) " +
+                     "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?)";
+
+        String filtroMunicipioSQL = (nombreMunicipio != null && !nombreMunicipio.isEmpty() && !nombreMunicipio.equals("Todos")) ? nombreMunicipio : null;
+        String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, filtroMunicipioSQL);
+            ps.setString(2, filtroMunicipioSQL);
+            ps.setString(3, filtroMunicipioSQL);
             
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            ps.setString(6, filtroLocalidad);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     resultados.put("Total Viviendas", rs.getInt("total_viviendas"));
@@ -279,26 +319,33 @@ public class DashboardDAO {
         return resultados;
     }
     
-    public double porcentajeViviendasConServiciosCompletos(String nombreMunicipio) {
+    public double porcentajeViviendasConServiciosCompletos(String nombreMunicipio, String nombreLocalidad) {
         double porcentaje = 0.0;
 
         String sql = "SELECT " +
-                     "   COALESCE( " +
-                     "       ROUND( " +
-                     "           CAST(SUM(CASE WHEN V.tieneAgua = 'SI' AND V.tieneLuz = 'SI' AND V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS DECIMAL(10, 2)) " +
-                     "           * 100.0 / NULLIF(CAST(COUNT(V.idVivienda) AS DECIMAL(10, 2)), 0), " +
-                     "           2 " +
-                     "       ), 0.0) AS porcentaje_con_todos_servicios " +
+                     "   COALESCE( " +
+                     "       ROUND( " +
+                     "           CAST(SUM(CASE WHEN V.tieneAgua = 'SI' AND V.tieneLuz = 'SI' AND V.tieneGas = 'SI' THEN 1 ELSE 0 END) AS DECIMAL(10, 2)) " +
+                     "           * 100.0 / NULLIF(CAST(COUNT(V.idVivienda) AS DECIMAL(10, 2)), 0), " +
+                     "           2 " +
+                     "       ), 0.0) AS porcentaje_con_todos_servicios " +
                      "FROM Vivienda V " +
                      "INNER JOIN Municipio M ON V.idMunicipio = M.idMunicipio " +
-                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?)";
+                     "INNER JOIN Localidad L ON V.idLocalidad = L.idLocalidad " +
+                     "WHERE (? IS NULL OR ? = 'Todos' OR M.descripcion = ?) " +
+                     "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?)";
+
+        String filtroMunicipioSQL = (nombreMunicipio != null && !nombreMunicipio.isEmpty() && !nombreMunicipio.equals("Todos")) ? nombreMunicipio : null;
+        String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            String filtro = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
+            ps.setString(1, filtroMunicipioSQL);
+            ps.setString(2, filtroMunicipioSQL);
+            ps.setString(3, filtroMunicipioSQL);
+            
+            ps.setString(4, filtroLocalidad);
+            ps.setString(5, filtroLocalidad);
+            ps.setString(6, filtroLocalidad);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

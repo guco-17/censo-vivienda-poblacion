@@ -17,16 +17,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class GraficoNivelEducativo extends javax.swing.JPanel {
     private final DashboardControlador controlador;
     private final String filtroMunicipio;
+    private final String filtroLocalidad;
     
-    public GraficoNivelEducativo(String municipio) {
+    public GraficoNivelEducativo(String municipio, String localidad) {
         initComponents();
         this.controlador = new DashboardControlador();
         this.filtroMunicipio = municipio;
+        this.filtroLocalidad = localidad;
         cargarGrafico();
     }
     
     private void cargarGrafico() {
-        Map<String, Map<String, Integer>> datos = controlador.obtenerNivelEducativoPorMunicipio(filtroMunicipio);
+        Map<String, Map<String, Integer>> datos = controlador.obtenerNivelEducativoPorMunicipio(filtroMunicipio, filtroLocalidad);
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -42,9 +44,21 @@ public class GraficoNivelEducativo extends javax.swing.JPanel {
             }
         }
 
+        for (Map.Entry<String, Map<String, Integer>> nivelEntry : datos.entrySet()) {
+            String nivelEducacion = nivelEntry.getKey();
+            Map<String, Integer> conteosPorMunicipio = nivelEntry.getValue();
+
+            for (Map.Entry<String, Integer> municipioEntry : conteosPorMunicipio.entrySet()) {
+                String municipio = municipioEntry.getKey();
+                int conteo = municipioEntry.getValue();
+
+                dataset.addValue(conteo, nivelEducacion, municipio); 
+            }
+        }
+
         JFreeChart chart = ChartFactory.createBarChart(
-            "Nivel Educativo por Municipio",
-            "Municipio",
+            "Nivel Educativo en " + (filtroLocalidad != null && !filtroLocalidad.equals("Todas") ? filtroLocalidad : (filtroMunicipio != null ? filtroMunicipio : "Todo")), 
+            "Municipio/Localidad",
             "No. de Habitantes",
             dataset,
             PlotOrientation.VERTICAL,
@@ -65,11 +79,11 @@ public class GraficoNivelEducativo extends javax.swing.JPanel {
 
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
         Color[] colores = {
-            new Color(255, 162, 235),   // Azul
-            new Color(255, 0, 0),   // Rosa
-            new Color(255, 206, 86),   // Amarillo
-            new Color(75, 192, 192),   // Verde agua
-            new Color(153, 102, 255)   // Morado
+            new Color(255, 162, 235), // Azul
+            new Color(255, 0, 0),     // Rosa
+            new Color(255, 206, 86),  // Amarillo
+            new Color(75, 192, 192),  // Verde agua
+            new Color(153, 102, 255)  // Morado
         };
 
         for (int i = 0; i < dataset.getRowCount(); i++) {

@@ -13,10 +13,12 @@ import org.jfree.data.general.DefaultPieDataset;
 public class GraficoHabitantesTipoVivienda extends javax.swing.JPanel {
     private final DashboardControlador controlador;
     private final String filtroMunicipio;
+    private final String filtroLocalidad;
     
-    public GraficoHabitantesTipoVivienda(String municipio) {
+    public GraficoHabitantesTipoVivienda(String municipio, String localidad) {
         initComponents();
         this.filtroMunicipio = municipio;
+        this.filtroLocalidad = localidad;
         this.controlador = new DashboardControlador();
         cargarGrafico();
     }
@@ -35,7 +37,8 @@ public class GraficoHabitantesTipoVivienda extends javax.swing.JPanel {
     };
     
     private void cargarGrafico(){
-        Map<String, Integer> datos = controlador.obtenerHabitantesPorTipoVivienda(filtroMunicipio);
+        // 3. ACTUALIZAR LA LLAMADA AL CONTROLADOR
+        Map<String, Integer> datos = controlador.obtenerHabitantesPorTipoVivienda(filtroMunicipio, filtroLocalidad);
 
         DefaultPieDataset dataset = new DefaultPieDataset();
         for (Map.Entry<String, Integer> entry : datos.entrySet()) {
@@ -49,9 +52,15 @@ public class GraficoHabitantesTipoVivienda extends javax.swing.JPanel {
         if (dataset.getItemCount() == 0) {
             return;
         }
+        
+        // 4. OPCIONAL: Actualizar el título para reflejar la localidad/municipio
+        String titulo = "Habitantes por Tipo de Vivienda en " + 
+                        (filtroLocalidad != null && !filtroLocalidad.equals("Todas") 
+                            ? filtroLocalidad 
+                            : (filtroMunicipio != null && !filtroMunicipio.equals("Todos") ? filtroMunicipio : "la Región"));
 
         JFreeChart chart = ChartFactory.createPieChart(
-            "Habitantes por Tipo de Vivienda",
+            titulo,
             dataset,
             false,
             false,

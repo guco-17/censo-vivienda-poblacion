@@ -65,7 +65,7 @@ public class LocalidadDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                localidades.add(mapearLocalidad(rs));;
+                localidades.add(mapearLocalidad(rs));
             }
         } catch (SQLException e) {
             throw new Exception("Error al obtener la lista de localidades: " + e.getMessage(), e);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import modelo.Localidad;
 import modelo.Municipio;
 import modelo.Usuario;
 import vista.Inicio;
@@ -31,25 +32,26 @@ public class Reporte extends javax.swing.JFrame {
         this.usuarioSesion = usuarioAutenticado;
         this.controlador = new DashboardControlador();
         cargarMunicipios();
-        cargarGraficoNivelEducativo(null);
+        cargarLocalidades();
+        cargarGraficoNivelEducativo(null, null);
         inicializarTabla();
         ajustarAnchoColumnas();
-        cargarDatosTabla(null);
-        cargarKPIs(null);
-        cargarGraficoTipoVivienda(null);
-        cargarGraficaServiciosBasicos(null);
+        cargarDatosTabla(null, null);
+        cargarKPIs(null, null);
+        cargarGraficoTipoVivienda(null, null);
+        cargarGraficaServiciosBasicos(null, null);
         cargarGraficoTop5Poblacion();
         cargarGraficoDistribucionEdad();
     }
     
-    private void cargarKPIs(String municipioSeleccionado){
+    private void cargarKPIs(String municipioSeleccionado, String localidadSeleccionada){
         //DENSIDAD DE POBLACIÓN
-        double promedioHabitanteVivienda = controlador.promedioHabitantesPorVivienda(municipioSeleccionado);
+        double promedioHabitanteVivienda = controlador.promedioHabitantesPorVivienda(municipioSeleccionado, localidadSeleccionada);
         String HabitanteViviendaFormateado = String.format("%.2f", promedioHabitanteVivienda);
         lblPromedioHabitanteVivienda1.setText(String.valueOf(HabitanteViviendaFormateado)); 
         
         //PORCENTAJE DE VIVIENDAS CON SERVICIOS BÁSICOS COMPLETOS
-        double porcentaje = controlador.obtenerPorcentajeViviendasConServiciosCompletos(municipioSeleccionado);
+        double porcentaje = controlador.obtenerPorcentajeViviendasConServiciosCompletos(municipioSeleccionado, localidadSeleccionada);
         String porcentajeFormateado = String.format("%.2f %%", porcentaje);
         statPorcentajeServiciosBasicos.setText(String.valueOf(porcentajeFormateado));
         
@@ -62,10 +64,10 @@ public class Reporte extends javax.swing.JFrame {
         poblacionMunicipioKPI.setText(String.valueOf(totalHabitantesMunicipio));
     }
     
-    private void cargarGraficoNivelEducativo(String municipioSeleccionado) {
+    private void cargarGraficoNivelEducativo(String municipioSeleccionado, String localidadSeleccionada) {
         nivelEducativoPanel.removeAll(); 
 
-        GraficoNivelEducativo graficoNivelEducativo = new GraficoNivelEducativo(municipioSeleccionado); 
+        GraficoNivelEducativo graficoNivelEducativo = new GraficoNivelEducativo(municipioSeleccionado, localidadSeleccionada); 
 
         graficoNivelEducativo.setSize(nivelEducativoPanel.getSize());
         nivelEducativoPanel.add(graficoNivelEducativo, BorderLayout.CENTER); 
@@ -74,11 +76,11 @@ public class Reporte extends javax.swing.JFrame {
         nivelEducativoPanel.repaint();
     }
     
-    private void cargarGraficoTipoVivienda(String municipioSeleccionado) {
+    private void cargarGraficoTipoVivienda(String municipioSeleccionado, String localidadSeleccionada) {
         panellHabitantesTipoVivienda.removeAll(); 
 
         // Asegúrate de que este es el nombre que le diste a tu JPanel
-        GraficoHabitantesTipoVivienda grafico = new GraficoHabitantesTipoVivienda(municipioSeleccionado); 
+        GraficoHabitantesTipoVivienda grafico = new GraficoHabitantesTipoVivienda(municipioSeleccionado, localidadSeleccionada); 
 
         grafico.setSize(panellHabitantesTipoVivienda.getSize());
         panellHabitantesTipoVivienda.add(grafico, BorderLayout.CENTER); 
@@ -88,14 +90,30 @@ public class Reporte extends javax.swing.JFrame {
     }
     
     private void cargarMunicipios() {
-        cboFiltro.removeAllItems();
-        cboFiltro.addItem("Todos");
+        cboFiltroMunicipio.removeAllItems();
+        cboFiltroMunicipio.addItem("Todos");
         
         try {
             List<Municipio> municipios = controlador.obtenerNombresMunicipios();
             
             for (Municipio municipio : municipios) {
-                cboFiltro.addItem(municipio.getDescripcion());
+                cboFiltroMunicipio.addItem(municipio.getDescripcion());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los municipios: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+    
+    private void cargarLocalidades() {
+        cboFiltroLocalidad.removeAllItems();
+        cboFiltroLocalidad.addItem("Todas");
+        
+        try {
+            List<Localidad> localidades = controlador.obtenerNombresLocalidades();
+            
+            for (Localidad localidad : localidades) {
+                cboFiltroLocalidad.addItem(localidad.getDescripcion());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar los municipios: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
@@ -138,11 +156,11 @@ public class Reporte extends javax.swing.JFrame {
         columnModel.getColumn(5).setPreferredWidth(anchoNombresDetallados);
     }
     
-    private void cargarGraficaServiciosBasicos(String municipioSeleccionado){
+    private void cargarGraficaServiciosBasicos(String municipioSeleccionado, String localidadSeleccionada){
         panelGraficaServiciosBasicos.removeAll(); 
 
         // Asegúrate de que este es el nombre que le diste a tu JPanel
-        GraficoServiciosBasicos grafico = new GraficoServiciosBasicos(municipioSeleccionado); 
+        GraficoServiciosBasicos grafico = new GraficoServiciosBasicos(municipioSeleccionado, localidadSeleccionada); 
 
         grafico.setSize(panellHabitantesTipoVivienda.getSize());
         panelGraficaServiciosBasicos.add(grafico, BorderLayout.CENTER); 
@@ -173,15 +191,18 @@ public class Reporte extends javax.swing.JFrame {
     }
 }
 
-    public void cargarDatosTabla(String municipioSeleccionado) {
+    public void cargarDatosTabla(String municipioSeleccionado, String localidadSeleccionada) {
         DefaultTableModel modelo = (DefaultTableModel) tablaResultados.getModel();
         modelo.setRowCount(0);
 
         try {
-            String filtro = (municipioSeleccionado != null && municipioSeleccionado.equals("Todos")) 
+            String filtroMunicipio = (municipioSeleccionado != null && municipioSeleccionado.equals("Todos")) 
                     ? null : municipioSeleccionado;
+            
+            String filtroLocalidad = (localidadSeleccionada != null && localidadSeleccionada.equals("Todos")) 
+                    ? null : localidadSeleccionada;
 
-            List<Map<String, Object>> listaReporte = controlador.obtenerTablaHabitantesViviendas(filtro);
+            List<Map<String, Object>> listaReporte = controlador.obtenerTablaHabitantesViviendas(filtroMunicipio, filtroLocalidad );
 
             if (listaReporte.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No se encontraron viviendas con los criterios de búsqueda.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
@@ -214,9 +235,12 @@ public class Reporte extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         lblPromedioHabitanteVivienda = new javax.swing.JLabel();
         panelFiltros = new javax.swing.JPanel();
-        cboFiltro = new javax.swing.JComboBox<>();
+        cboFiltroMunicipio = new javax.swing.JComboBox<>();
         lblTitulo = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
+        lblFiltroMunicipio = new javax.swing.JLabel();
+        lblFiltroLocalidad = new javax.swing.JLabel();
+        cboFiltroLocalidad = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         panelPrincipal = new javax.swing.JPanel();
         panelPromedioHabitantesVivienda1 = new javax.swing.JPanel();
@@ -278,10 +302,10 @@ public class Reporte extends javax.swing.JFrame {
 
         panelFiltros.setBackground(new java.awt.Color(102, 102, 255));
 
-        cboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cboFiltro.addActionListener(new java.awt.event.ActionListener() {
+        cboFiltroMunicipio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFiltroMunicipio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboFiltroActionPerformed(evt);
+                cboFiltroMunicipioActionPerformed(evt);
             }
         });
 
@@ -298,28 +322,58 @@ public class Reporte extends javax.swing.JFrame {
             }
         });
 
+        lblFiltroMunicipio.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblFiltroMunicipio.setText("Municipio:");
+
+        lblFiltroLocalidad.setFont(new java.awt.Font("Gadugi", 0, 12)); // NOI18N
+        lblFiltroLocalidad.setText("Localidad:");
+
+        cboFiltroLocalidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFiltroLocalidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboFiltroLocalidadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cboFiltroMunicipio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFiltroMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cboFiltroLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFiltroLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFiltrosLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cboFiltro)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(lblFiltroLocalidad)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboFiltroLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(lblFiltroMunicipio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cboFiltroMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap())
         );
 
         panelPrincipal.setBackground(new java.awt.Color(204, 204, 204));
@@ -626,7 +680,7 @@ public class Reporte extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE))
         );
 
         pack();
@@ -638,22 +692,28 @@ public class Reporte extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuItemInicioActionPerformed
 
-    private void cboFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltroActionPerformed
+    private void cboFiltroMunicipioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltroMunicipioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboFiltroActionPerformed
+    }//GEN-LAST:event_cboFiltroMunicipioActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        String municipioSeleccionado = (String) cboFiltro.getSelectedItem();
-        cargarDatosTabla(municipioSeleccionado);
-        cargarKPIs(municipioSeleccionado);
-        cargarGraficoNivelEducativo(municipioSeleccionado);
-        cargarGraficoTipoVivienda(municipioSeleccionado);
-        cargarGraficaServiciosBasicos(municipioSeleccionado);
+        String municipioSeleccionado = (String) cboFiltroMunicipio.getSelectedItem();
+        String localidadSeleccionada = (String) cboFiltroLocalidad.getSelectedItem();
+        cargarDatosTabla(municipioSeleccionado, localidadSeleccionada);
+        cargarKPIs(municipioSeleccionado, localidadSeleccionada);
+        cargarGraficoNivelEducativo(municipioSeleccionado, localidadSeleccionada);
+        cargarGraficoTipoVivienda(municipioSeleccionado, localidadSeleccionada);
+        cargarGraficaServiciosBasicos(municipioSeleccionado, localidadSeleccionada);
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void cboFiltroLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltroLocalidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboFiltroLocalidadActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JComboBox<String> cboFiltro;
+    private javax.swing.JComboBox<String> cboFiltroLocalidad;
+    private javax.swing.JComboBox<String> cboFiltroMunicipio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -662,6 +722,8 @@ public class Reporte extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblFiltroLocalidad;
+    private javax.swing.JLabel lblFiltroMunicipio;
     private javax.swing.JLabel lblPoblacionMunicipio;
     private javax.swing.JLabel lblPoblacionTotal;
     private javax.swing.JLabel lblPorcentajeServicios;

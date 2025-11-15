@@ -12,19 +12,21 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class GraficoServiciosBasicos extends javax.swing.JPanel {
     private final DashboardControlador controlador;
     private final String municipioFiltro;
+    private final String localidadFiltro;
     
-    public GraficoServiciosBasicos(String municipioSeleccionado) {
+    public GraficoServiciosBasicos(String municipioSeleccionado, String localidadSeleccionada) {
         initComponents();
         this.controlador = new DashboardControlador();
         
         this.municipioFiltro = (municipioSeleccionado != null && municipioSeleccionado.equals("Todos")) ? null : municipioSeleccionado;
+        this.localidadFiltro = (localidadSeleccionada != null && localidadSeleccionada.equals("Todas")) ? null : localidadSeleccionada;
         
         setLayout(new BorderLayout());
         cargarGrafico();
     }
     
     private void cargarGrafico(){
-        Map<String, Integer> datos = controlador.obtenerserviciosBasicosMunicipio(municipioFiltro);
+        Map<String, Integer> datos = controlador.obtenerserviciosBasicosMunicipio(municipioFiltro, localidadFiltro);
         
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -38,18 +40,26 @@ public class GraficoServiciosBasicos extends javax.swing.JPanel {
             }
         }
 
-        String titulo = "Servicios Básicos por Vivienda " + 
-                        (municipioFiltro != null ? "en " + municipioFiltro : "(Todo el Estado)");
+        String filtroTexto;
+        if (localidadFiltro != null) {
+            filtroTexto = "en " + localidadFiltro;
+        } else if (municipioFiltro != null) {
+            filtroTexto = "en " + municipioFiltro;
+        } else {
+            filtroTexto = "(Todo el Estado)";
+        }
+        
+        String titulo = "Servicios Básicos por Vivienda " + filtroTexto;
         
         JFreeChart chart = ChartFactory.createBarChart(
             titulo,
             "Tipo de Servicio",
             "Cantidad de Viviendas",
-            dataset,       // Datos
+            dataset,      // Datos
             PlotOrientation.VERTICAL,
-            true,          // Mostrar leyenda
-            true,          // Generar tooltips
-            false          // Generar URLs
+            true,         // Mostrar leyenda
+            true,         // Generar tooltips
+            false         // Generar URLs
         );
 
         chart.setBackgroundPaint(Color.white);
@@ -59,7 +69,7 @@ public class GraficoServiciosBasicos extends javax.swing.JPanel {
         this.add(chartPanel, BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
-    } 
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
