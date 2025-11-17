@@ -143,45 +143,51 @@ public class DashboardDAO {
     }
     
     //TABLA HABITANTES POR VIVIENDA
-    public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio, String nombreLocalidad) {
+    public List<Map<String, Object>> obtenerHabitantesPorVivienda(String nombreMunicipio, String nombreLocalidad, int codigoVivienda) {
         List<Map<String, Object>> resultados = new ArrayList<>();
 
         String sql = "SELECT \n" +
-                    "    V.codigoVivienda, \n" +
-                    "    M.descripcion AS nombreMunicipio, \n" +
-                    "    V.colonia, V.calle, V.numeroExterior, \n" +
-                    "    COUNT(H.idHabitante) AS totalHabitantes, \n" +
-                    "    STUFF((SELECT '; ' + H2.nombre + ' ' + H2.paterno + ' ' + COALESCE(H2.materno, '') \n" +
-                    "           FROM Habitante H2 WHERE H2.idVivienda = V.idVivienda \n" +
-                    "           FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS nombresDetallados, \n" +
-                    "    COALESCE(\n" +
-                    "        (SELECT STUFF((SELECT DISTINCT '; ' + AE.descripcion \n" +
-                    "                       FROM Habitante H3 \n" +
-                    "                       INNER JOIN Habitante_Actividad HA ON H3.idHabitante = HA.idHabitante \n" +
-                    "                       INNER JOIN ActividadEconomica AE ON HA.idActividadEconomica = AE.idActividadEconomica \n" +
-                    "                       WHERE H3.idVivienda = V.idVivienda \n" +
-                    "                       FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '')),\n" +
-                    "        'Sin actividad registrada'\n" +
-                    "    ) AS actividadesEconomicas \n" +
-                    "FROM Vivienda V \n" +
-                    "JOIN Habitante H ON V.idVivienda = H.idVivienda \n" +
-                    "JOIN Municipio M ON V.idMunicipio = M.idMunicipio \n" +
-                    "JOIN Localidad L ON V.idLocalidad = L.idLocalidad \n" + // <-- JOIN A LOCALIDAD
-                    "WHERE (? = 'Todos' OR M.descripcion = ?) \n" +
-                    "AND (? IS NULL OR ? = 'Todas' OR L.descripcion = ?) \n" +
-                    "GROUP BY V.idVivienda, V.codigoVivienda, V.calle, V.numeroExterior, V.colonia, M.descripcion \n" +
-                    "ORDER BY V.codigoVivienda";
+                 "    V.codigoVivienda, \n" +
+                 "    M.descripcion AS nombreMunicipio, \n" +
+                 "    L.descripcion AS nombreLocalidad, \n" + // <-- Asegúrate de que L.descripcion se seleccione
+                 "    V.colonia, V.calle, V.numeroExterior, \n" +
+                 "    COUNT(H.idHabitante) AS totalHabitantes, \n" +
+                 "    STUFF((SELECT '; ' + H2.nombre + ' ' + H2.paterno + ' ' + COALESCE(H2.materno, '') \n" +
+                 "           FROM Habitante H2 WHERE H2.idVivienda = V.idVivienda \n" +
+                 "           FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS nombresDetallados, \n" +
+                 "    COALESCE(\n" +
+                 "        (SELECT STUFF((SELECT DISTINCT '; ' + AE.descripcion \n" +
+                 "                       FROM Habitante H3 \n" +
+                 "                       INNER JOIN Habitante_Actividad HA ON H3.idHabitante = HA.idHabitante \n" +
+                 "                       INNER JOIN ActividadEconomica AE ON HA.idActividadEconomica = AE.idActividadEconomica \n" +
+                 "                       WHERE H3.idVivienda = V.idVivienda \n" +
+                 "                       FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, '')),\n" +
+                 "        'Sin actividad registrada'\n" +
+                 "    ) AS actividadesEconomicas \n" +
+                 "FROM Vivienda V \n" +
+                 "JOIN Habitante H ON V.idVivienda = H.idVivienda \n" +
+                 "JOIN Municipio M ON V.idMunicipio = M.idMunicipio \n" +
+                 "JOIN Localidad L ON V.idLocalidad = L.idLocalidad \n" +
+                 "WHERE (? = 'Todos' OR M.descripcion = ?) \n" +
+                 "AND (? = 'Todas' OR L.descripcion = ?) \n" +
+                 "AND (? = 0 OR V.codigoVivienda = ?) \n" +
+                 "GROUP BY V.idVivienda, V.codigoVivienda, V.calle, V.numeroExterior, V.colonia, M.descripcion, L.descripcion \n" + // <-- L.descripcion agregado al GROUP BY
+                 "ORDER BY V.codigoVivienda";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             String filtroMunicipio = (nombreMunicipio != null && !nombreMunicipio.isEmpty()) ? nombreMunicipio : "Todos";
             String filtroLocalidad = (nombreLocalidad != null && !nombreLocalidad.isEmpty()) ? nombreLocalidad : "Todas";
-            
+
             ps.setString(1, filtroMunicipio);
             ps.setString(2, filtroMunicipio);
-            
+
             ps.setString(3, filtroLocalidad);
             ps.setString(4, filtroLocalidad);
-            ps.setString(5, filtroLocalidad);
+
+            int codigoFiltro = (codigoVivienda > 0) ? codigoVivienda : 0; 
+
+            ps.setInt(5, codigoFiltro);
+            ps.setInt(6, codigoFiltro);
             
             try (ResultSet rs = ps.executeQuery()) {
                 ResultSetMetaData meta = rs.getMetaData();

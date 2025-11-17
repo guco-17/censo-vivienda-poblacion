@@ -36,7 +36,8 @@ public class Reporte extends javax.swing.JFrame {
         cargarGraficoNivelEducativo(null, null);
         inicializarTabla();
         ajustarAnchoColumnas();
-        cargarDatosTabla(null, null);
+        aplicarFiltrosYActualizar();
+        cargarDatosTabla(null, null, 0);
         cargarKPIs(null, null);
         cargarGraficoTipoVivienda(null, null);
         cargarGraficaServiciosBasicos(null, null);
@@ -122,15 +123,15 @@ public class Reporte extends javax.swing.JFrame {
     }
     
     private void inicializarTabla() {
-    DefaultTableModel modelo = new DefaultTableModel(null, COLUMNAS_REPORTE) {
-        // Opcional: Esto hace que las celdas no sean editables
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-    tablaResultados.setModel(modelo);
-}
+        DefaultTableModel modelo = new DefaultTableModel(null, COLUMNAS_REPORTE) {
+            // Opcional: Esto hace que las celdas no sean editables
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaResultados.setModel(modelo);
+    }
     
     private void ajustarAnchoColumnas() {
         javax.swing.table.TableColumnModel columnModel = tablaResultados.getColumnModel();
@@ -191,7 +192,7 @@ public class Reporte extends javax.swing.JFrame {
     }
 }
 
-    public void cargarDatosTabla(String municipioSeleccionado, String localidadSeleccionada) {
+    public void cargarDatosTabla(String municipioSeleccionado, String localidadSeleccionada, int codigoVivienda) {
         DefaultTableModel modelo = (DefaultTableModel) tablaResultados.getModel();
         modelo.setRowCount(0);
 
@@ -202,31 +203,49 @@ public class Reporte extends javax.swing.JFrame {
             String filtroLocalidad = (localidadSeleccionada != null && localidadSeleccionada.equals("Todos")) 
                     ? null : localidadSeleccionada;
 
-            List<Map<String, Object>> listaReporte = controlador.obtenerTablaHabitantesViviendas(filtroMunicipio, filtroLocalidad );
+            List<Map<String, Object>> datos = controlador.obtenerTablaHabitantesViviendas(filtroMunicipio, filtroLocalidad, codigoVivienda);
 
-            if (listaReporte.isEmpty()) {
+            if (datos.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No se encontraron viviendas con los criterios de búsqueda.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
-            for (Map<String, Object> fila : listaReporte) {
-                Object[] nuevaFila = new Object[COLUMNAS_REPORTE.length];
-
-                nuevaFila[0] = fila.get("codigoVivienda"); 
-                nuevaFila[1] = fila.get("nombreMunicipio");
-                nuevaFila[2] = fila.get("colonia");
-                nuevaFila[3] = fila.get("calle");
-                nuevaFila[4] = fila.get("totalHabitantes");
-                nuevaFila[5] = fila.get("nombresDetallados");
-                nuevaFila[6] = fila.get("actividadesEconomicas");
-
-                modelo.addRow(nuevaFila);
+            for (Map<String, Object> fila : datos) {
+                modelo.addRow(new Object[]{
+                    fila.get("codigoVivienda"),
+                    fila.get("nombreMunicipio"),
+                    fila.get("colonia"),
+                    fila.get("calle"),
+                    fila.get("totalHabitantes"),
+                    fila.get("nombresDetallados"),
+                    fila.get("actividadesEconomicas")
+                });
             }
 
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(this, "Error al cargar los datos: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void aplicarFiltrosYActualizar() {
+        String municipioSeleccionado = (String) cboFiltroMunicipio.getSelectedItem();
+        String localidadSeleccionada = (String) cboFiltroLocalidad.getSelectedItem();
+
+        Integer codigoVivienda = 0;
+
+        try {
+            String codigoViviendaStr = txtFiltroVivienda.getText().trim(); 
+
+            if (!codigoViviendaStr.isEmpty()) {
+                codigoVivienda = Integer.parseInt(codigoViviendaStr);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El Código de Vivienda debe ser un número entero válido.", "Error de Entrada", JOptionPane.WARNING_MESSAGE);
+        }
+
+        cargarDatosTabla(municipioSeleccionado, localidadSeleccionada, codigoVivienda);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -241,6 +260,8 @@ public class Reporte extends javax.swing.JFrame {
         lblFiltroMunicipio = new javax.swing.JLabel();
         lblFiltroLocalidad = new javax.swing.JLabel();
         cboFiltroLocalidad = new javax.swing.JComboBox<>();
+        txtFiltroVivienda = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         panelPrincipal = new javax.swing.JPanel();
         panelPromedioHabitantesVivienda1 = new javax.swing.JPanel();
@@ -335,6 +356,15 @@ public class Reporte extends javax.swing.JFrame {
             }
         });
 
+        txtFiltroVivienda.setText("0");
+        txtFiltroVivienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFiltroViviendaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Código Vivienda:");
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -343,6 +373,10 @@ public class Reporte extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtFiltroVivienda)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cboFiltroMunicipio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblFiltroMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -356,11 +390,10 @@ public class Reporte extends javax.swing.JFrame {
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+            .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
@@ -368,11 +401,15 @@ public class Reporte extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cboFiltroLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(lblFiltroMunicipio)
+                                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblFiltroMunicipio)
+                                    .addComponent(jLabel3))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cboFiltroMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(cboFiltroMunicipio, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                                    .addComponent(txtFiltroVivienda)))))
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -699,7 +736,8 @@ public class Reporte extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         String municipioSeleccionado = (String) cboFiltroMunicipio.getSelectedItem();
         String localidadSeleccionada = (String) cboFiltroLocalidad.getSelectedItem();
-        cargarDatosTabla(municipioSeleccionado, localidadSeleccionada);
+        int codigoVivienda = Integer.parseInt(txtFiltroVivienda.getText());
+        cargarDatosTabla(municipioSeleccionado, localidadSeleccionada, codigoVivienda);
         cargarKPIs(municipioSeleccionado, localidadSeleccionada);
         cargarGraficoNivelEducativo(municipioSeleccionado, localidadSeleccionada);
         cargarGraficoTipoVivienda(municipioSeleccionado, localidadSeleccionada);
@@ -710,12 +748,17 @@ public class Reporte extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cboFiltroLocalidadActionPerformed
 
+    private void txtFiltroViviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltroViviendaActionPerformed
+        aplicarFiltrosYActualizar();
+    }//GEN-LAST:event_txtFiltroViviendaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JComboBox<String> cboFiltroLocalidad;
     private javax.swing.JComboBox<String> cboFiltroMunicipio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
@@ -746,5 +789,6 @@ public class Reporte extends javax.swing.JFrame {
     private javax.swing.JLabel poblacionTotalKPI;
     private javax.swing.JLabel statPorcentajeServiciosBasicos;
     private javax.swing.JTable tablaResultados;
+    private javax.swing.JTextField txtFiltroVivienda;
     // End of variables declaration//GEN-END:variables
 }
